@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 💎 VAISHNAVI ALANKAR - Luxury Indian Jewelry
 
 A high-end, luxury interactive web application for **Vaishnavi Alankar**, showcasing exquisite Indian jewelry pieces, 3D rotating product views, and smooth scroll-driven frame animations.
@@ -81,3 +82,7 @@ Double-click `index.html` or drag it directly into any modern browser (Google Ch
 - **Tailwind CSS** (via CDN with custom luxury color tokens)
 - **Three.js** (for 3D rendering)
 - **GSAP & ScrollTrigger** (for scroll animation physics)
+=======
+# My-first-website-Vaishnavi-Alankar
+i have created a website for jwellary shop of my friend. i used some ai named Antigravity, Stitch, Google-Flow, Google AI Studio.
+>>>>>>> c6a24f10bda3845f6868fd27a4ae078e267ee009
