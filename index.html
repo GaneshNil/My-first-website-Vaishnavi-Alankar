@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>VAISHNAVI ALANKAR - Luxury Indian Jewelry</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "error": "#ffb4ab",
+                "tertiary-fixed": "#aef2bb",
+                "surface-container-highest": "#353534",
+                "primary-fixed-dim": "#e9c349",
+                "on-error-container": "#ffdad6",
+                "on-primary": "#3c2f00",
+                "secondary-fixed-dim": "#c6c7c2",
+                "surface-container-low": "#1c1b1b",
+                "surface": "#131313",
+                "on-tertiary-fixed-variant": "#0b5229",
+                "on-primary-fixed-variant": "#574500",
+                "inverse-on-surface": "#313030",
+                "surface-container-high": "#2a2a2a",
+                "primary": "#f2ca50",
+                "background": "#131313",
+                "outline": "#99907c",
+                "on-tertiary": "#003919",
+                "on-tertiary-container": "#085028",
+                "on-primary-container": "#554300",
+                "on-surface": "#e5e2e1",
+                "tertiary-fixed-dim": "#93d6a0",
+                "on-secondary-fixed": "#1a1c19",
+                "surface-dim": "#131313",
+                "surface-container": "#201f1f",
+                "error-container": "#93000a",
+                "surface-variant": "#353534",
+                "on-background": "#e5e2e1",
+                "on-error": "#690005",
+                "on-secondary-container": "#b8b9b4",
+                "secondary": "#c6c7c2",
+                "on-secondary-fixed-variant": "#454744",
+                "on-surface-variant": "#d0c5af",
+                "on-secondary": "#2f312e",
+                "secondary-container": "#484a46",
+                "outline-variant": "#4d4635",
+                "on-primary-fixed": "#241a00",
+                "surface-container-lowest": "#0e0e0e",
+                "tertiary": "#9bdea8",
+                "surface-bright": "#3a3939",
+                "inverse-primary": "#735c00",
+                "tertiary-container": "#80c28e",
+                "secondary-fixed": "#e3e3de",
+                "inverse-surface": "#e5e2e1",
+                "on-tertiary-fixed": "#00210c",
+                "primary-container": "#d4af37",
+                "primary-fixed": "#ffe088",
+                "surface-tint": "#e9c349"
+              },
+              spacing: {
+                "margin-mobile": "24px",
+                "section-gap": "120px",
+                "unit": "8px",
+                "gutter": "32px",
+                "margin-desktop": "80px",
+                "container-max": "1440px"
+              },
+              fontFamily: {
+                "body-lg": ["Montserrat", "sans-serif"],
+                "body-md": ["Montserrat", "sans-serif"],
+                "headline-xl": ["Playfair Display", "serif"],
+                "headline-xl-mobile": ["Playfair Display", "serif"],
+                "headline-md": ["Playfair Display", "serif"],
+                "label-caps": ["Montserrat", "sans-serif"],
+                "display-lg-mobile": ["Playfair Display", "serif"],
+                "display-lg": ["Playfair Display", "serif"]
+              }
+            }
+          }
+        }
+    </script>
+    <!-- Three.js for 3D Showcase -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-background text-on-background font-body-md relative antialiased selection:bg-primary/30 selection:text-primary">
+    <!-- Scroll-Driven Background Animation Canvas -->
+    <canvas id="bg-scroll-canvas" class="fixed inset-0 w-full h-full pointer-events-none -z-10"></canvas>
+
+    <!-- TopNavBar -->
+    <nav class="fixed top-0 w-full z-50 transition-all duration-500 ease-in-out flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4" id="navbar">
+        <a href="#hero" class="flex items-center gap-3 hover:opacity-90 transition-opacity">
+            <img src="assets/logo.jpg" alt="Vaishnavi Alankar Logo" class="h-10 md:h-12 w-auto object-contain rounded-md border border-primary/30 shadow-md">
+            <span class="font-headline-md text-xl sm:text-2xl md:text-3xl text-primary tracking-[0.2em] font-semibold uppercase">
+                VAISHNAVI ALANKAR
+            </span>
+        </a>
+        <div class="hidden md:flex space-x-8 items-center">
+            <a class="nav-link active font-body-md text-label-caps text-primary border-b border-primary pb-1 transition-colors duration-300 uppercase tracking-widest text-xs" href="#hero">Home</a>
+            <a class="nav-link font-body-md text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300 uppercase tracking-widest text-xs" href="#collections">Collections</a>
+            <a class="nav-link font-body-md text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300 uppercase tracking-widest text-xs" href="#bridal">Bridal</a>
+            <a class="nav-link font-body-md text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300 uppercase tracking-widest text-xs" href="#heritage">Heritage</a>
+            <a class="nav-link font-body-md text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300 uppercase tracking-widest text-xs" href="#contact">Contact</a>
+        </div>
+        <div class="flex items-center space-x-6 text-primary">
+            <button id="btn-wishlist-toggle" aria-label="Wishlist" class="relative hover:text-primary-fixed transition-colors">
+                <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 0;">favorite</span>
+                <span id="wishlist-badge" class="absolute -top-2 -right-2 bg-primary text-on-primary text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center opacity-0 transition-opacity">0</span>
+            </button>
+            <button id="btn-cart-toggle" aria-label="Shopping Cart" class="relative hover:text-primary-fixed transition-colors">
+                <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 0;">shopping_cart</span>
+                <span id="cart-badge" class="absolute -top-2 -right-2 bg-primary text-on-primary text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center opacity-0 transition-opacity">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile BottomNav -->
+    <div class="md:hidden fixed bottom-0 w-full z-50 bg-surface/90 backdrop-blur-xl border-t border-outline-variant/30 flex justify-around items-center py-3 px-4">
+        <a class="flex flex-col items-center text-primary" href="#hero"><span class="material-symbols-outlined mb-1">home</span><span class="text-[10px] uppercase tracking-widest">Home</span></a>
+        <a class="flex flex-col items-center text-on-surface-variant hover:text-primary" href="#collections"><span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">diamond</span><span class="text-[10px] uppercase tracking-widest font-bold">Collections</span></a>
+        <a class="flex flex-col items-center text-on-surface-variant hover:text-primary" href="#bridal"><span class="material-symbols-outlined mb-1">favorite</span><span class="text-[10px] uppercase tracking-widest">Bridal</span></a>
+    </div>
+
+    <!-- Main Content -->
+    <main class="w-full overflow-hidden">
+        <!-- Hero Section -->
+        <section id="hero" class="min-h-screen relative flex items-center justify-center pt-24 pb-16 px-margin-mobile md:px-margin-desktop overflow-hidden">
+            <!-- Background Image with Ambient Particle Canvas Overlay -->
+            <div class="absolute inset-0 bg-cover bg-center img-hover-scale filter brightness-[0.4]" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDCuLwM3yJdnd2n3PZc82X9X6b_X6dPX49qX0jYt5jK_Xb6Q4Z5w4X3v4Y5=s1600')"></div>
+            <canvas id="particles-canvas" class="absolute inset-0 pointer-events-none z-10"></canvas>
+            <div class="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent z-10"></div>
+
+            <div class="relative z-20 text-center max-w-4xl mx-auto fade-slide-up">
+                <span class="font-label-caps text-xs md:text-sm text-primary tracking-[0.3em] uppercase mb-4 block font-semibold">
+                    The Pinnacle of Royal Indian Craftsmanship
+                </span>
+                <h1 class="font-headline-xl text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-on-surface mb-6 leading-tight tracking-tight">
+                    Timeless Luxury & Royal Heritage
+                </h1>
+                <p class="font-body-lg text-base md:text-lg text-on-surface max-w-2xl mx-auto mb-10 text-opacity-90 leading-relaxed">
+                    Discover handcrafted gold and silver jewellery designed to celebrate every occasion. A legacy of master craftsmanship, curated for the modern connoisseur.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-6 relative z-50">
+                    <button onclick="scrollToSection('collections')" class="w-full sm:w-auto px-8 py-4 bg-transparent border border-primary text-primary-fixed font-label-caps text-xs uppercase tracking-[0.2em] hover:bg-primary hover:text-on-primary transition-all duration-500 inner-glow inline-block text-center cursor-pointer shadow-xl">
+                        Explore Collection
+                    </button>
+                    <button id="btn-open-appointment" onclick="openAppointmentModal()" class="w-full sm:w-auto px-8 py-4 bg-transparent border border-on-surface text-on-surface font-label-caps text-xs uppercase tracking-[0.2em] hover:border-primary hover:text-primary transition-all duration-500 cursor-pointer shadow-xl">
+                        Book Appointment & Contact Concierge
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Collections Section -->
+        <section id="collections" class="py-section-gap px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+            <div class="text-center mb-12 fade-slide-up">
+                <span class="font-label-caps text-xs text-primary tracking-[0.25em] uppercase mb-3 block">Curated Masterpieces</span>
+                <h2 class="font-headline-xl text-3xl md:text-5xl text-on-surface">Featured Collections</h2>
+                <div class="w-16 h-px bg-primary mx-auto mt-6"></div>
+            </div>
+
+            <!-- Audience Collection Type Banner Cards (Womens, Mens, Kids) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 fade-slide-up">
+                <!-- Womens Collection Card -->
+                <div onclick="filterByAudience('womens')" class="glass-panel inner-glow ambient-shadow overflow-hidden group cursor-pointer relative h-[320px] rounded-lg flex flex-col justify-end p-6 border border-primary/30 transition-transform duration-500 hover:-translate-y-2">
+                    <div class="absolute inset-0 bg-cover bg-center img-hover-scale transition-transform duration-700 group-hover:scale-110" style="background-image: url('assets/gold_choker.jpg')"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
+                    <div class="relative z-10">
+                        <span class="text-[10px] uppercase tracking-[0.25em] text-primary font-bold block mb-1">For Her</span>
+                        <h3 class="font-headline-md text-2xl text-on-surface group-hover:text-primary transition-colors">Women's Collection</h3>
+                        <p class="text-xs text-on-surface-variant mt-1 mb-4">Bridal Sets, Antique Gold, Earrings & Solitaires</p>
+                        <span class="inline-flex items-center text-xs uppercase tracking-widest text-primary font-semibold group-hover:underline">
+                            Explore Collection <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Mens Collection Card -->
+                <div onclick="filterByAudience('mens')" class="glass-panel inner-glow ambient-shadow overflow-hidden group cursor-pointer relative h-[320px] rounded-lg flex flex-col justify-end p-6 border border-primary/30 transition-transform duration-500 hover:-translate-y-2">
+                    <div class="absolute inset-0 bg-cover bg-center img-hover-scale transition-transform duration-700 group-hover:scale-110" style="background-image: url('assets/mens_kada_chain.jpg')"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
+                    <div class="relative z-10">
+                        <span class="text-[10px] uppercase tracking-[0.25em] text-primary font-bold block mb-1">For Him</span>
+                        <h3 class="font-headline-md text-2xl text-on-surface group-hover:text-primary transition-colors">Men's Collection</h3>
+                        <p class="text-xs text-on-surface-variant mt-1 mb-4">Solid Royal Kadas, Heavy Chains & Signet Rings</p>
+                        <span class="inline-flex items-center text-xs uppercase tracking-widest text-primary font-semibold group-hover:underline">
+                            Explore Collection <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Kids Collection Card -->
+                <div onclick="filterByAudience('kids')" class="glass-panel inner-glow ambient-shadow overflow-hidden group cursor-pointer relative h-[320px] rounded-lg flex flex-col justify-end p-6 border border-primary/30 transition-transform duration-500 hover:-translate-y-2">
+                    <div class="absolute inset-0 bg-cover bg-center img-hover-scale transition-transform duration-700 group-hover:scale-110" style="background-image: url('assets/kids_nazariya.jpg')"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
+                    <div class="relative z-10">
+                        <span class="text-[10px] uppercase tracking-[0.25em] text-primary font-bold block mb-1">Little Royalty</span>
+                        <h3 class="font-headline-md text-2xl text-on-surface group-hover:text-primary transition-colors">Children's Collection</h3>
+                        <p class="text-xs text-on-surface-variant mt-1 mb-4">Baby Nazariya, Gold Bangles & Charm Pendants</p>
+                        <span class="inline-flex items-center text-xs uppercase tracking-widest text-primary font-semibold group-hover:underline">
+                            Explore Collection <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audience Filter Buttons (Womens, Mens, Children) -->
+            <div id="jewelry-section-target" class="scroll-mt-28 mb-8 text-center">
+                <div class="inline-flex flex-wrap justify-center gap-2 p-1.5 bg-surface-container-high/80 border border-primary/30 rounded-full mb-6">
+                    <button class="audience-btn active px-6 py-2 rounded-full text-xs uppercase tracking-widest transition-all font-semibold bg-primary text-on-primary" data-audience="all">All Jewelry</button>
+                    <button class="audience-btn px-6 py-2 rounded-full text-xs uppercase tracking-widest transition-all font-semibold text-on-surface-variant hover:text-primary" data-audience="womens">Women's</button>
+                    <button class="audience-btn px-6 py-2 rounded-full text-xs uppercase tracking-widest transition-all font-semibold text-on-surface-variant hover:text-primary" data-audience="mens">Men's</button>
+                    <button class="audience-btn px-6 py-2 rounded-full text-xs uppercase tracking-widest transition-all font-semibold text-on-surface-variant hover:text-primary" data-audience="kids">Children's</button>
+                </div>
+
+                <!-- Sub-category Type Pills -->
+                <div class="flex justify-center flex-wrap gap-3 mb-10">
+                    <button class="filter-btn active px-5 py-1.5 border border-primary text-primary text-[11px] uppercase tracking-widest rounded" data-filter="all">All Types</button>
+                    <button class="filter-btn px-5 py-1.5 border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary text-[11px] uppercase tracking-widest rounded" data-filter="necklaces">Necklaces</button>
+                    <button class="filter-btn px-5 py-1.5 border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary text-[11px] uppercase tracking-widest rounded" data-filter="earrings">Earrings</button>
+                    <button class="filter-btn px-5 py-1.5 border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary text-[11px] uppercase tracking-widest rounded" data-filter="bangles">Bangles & Kadas</button>
+                    <button class="filter-btn px-5 py-1.5 border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary text-[11px] uppercase tracking-widest rounded" data-filter="mangalsutra">Mangalsutra</button>
+                </div>
+            </div>
+
+            <!-- Cards Grid -->
+            <div id="collection-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+                <!-- Womens: Necklaces Item 1 -->
+                <div class="product-item glass-panel inner-glow ambient-shadow overflow-hidden group fade-slide-up flex flex-col h-[480px] rounded-lg border border-primary/20 hover:border-primary transition-all duration-300" data-audience="womens" data-category="necklaces">
+                    <div class="img-hover-container flex-grow relative cursor-pointer overflow-hidden" onclick="openQuickView('Royal Kundan Ruby Choker', 'Heavy 22K antique gold choker studded with untreated Burmese rubies, emeralds and pearls.', '₹2,15,000', 'assets/gold_choker.jpg')">
+                        <div class="absolute inset-0 bg-cover bg-center img-hover-scale" style="background-image: url('assets/gold_choker.jpg')"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
+                        
+                        <!-- Hover Action Overlay -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/40 backdrop-blur-[2px] z-20">
+                            <button onclick="event.stopPropagation(); openQuickView('Royal Kundan Ruby Choker', 'Heavy 22K antique gold choker studded with untreated Burmese rubies, emeralds and pearls.', '₹2,15,000', 'assets/gold_choker.jpg')" class="px-5 py-2 bg-primary text-on-primary text-xs uppercase tracking-widest font-semibold hover:bg-primary-fixed transition-all shadow-lg flex items-center gap-1">
+                                Quick View
+                            </button>
+                        </div>
+                        <div class="absolute top-4 right-4 z-30">
+                            <button onclick="event.stopPropagation(); toggleWishlist('Royal Kundan Ruby Choker', '₹2,15,000', 'assets/gold_choker.jpg')" class="p-2.5 bg-surface/80 rounded-full text-primary hover:bg-primary hover:text-on-primary transition-colors shadow-lg">
+                                <span class="material-symbols-outlined text-lg">favorite</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-5 bg-surface-container/90 backdrop-blur-md relative z-10 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] uppercase tracking-widest text-primary/80 font-bold block mb-1">Women's • 22K Gold</span>
+                            <h3 class="font-headline-md text-base text-primary mb-1 group-hover:text-primary-fixed transition-colors">Royal Kundan Ruby Choker</h3>
+                            <p class="font-body-md text-xs text-on-surface-variant mb-3 line-clamp-2">Intricate antique filigree with emeralds & rubies.</p>
+                        </div>
+                        <div class="flex justify-between items-center pt-2 border-t border-outline-variant/30">
+                            <span class="font-headline-md text-primary font-bold text-base">₹2,15,000</span>
+                            <button onclick="addToCart('Royal Kundan Ruby Choker', '₹2,15,000', 'assets/gold_choker.jpg')" class="px-3.5 py-2 bg-primary/10 border border-primary text-primary text-[10px] uppercase tracking-widest font-bold hover:bg-primary hover:text-on-primary transition-all flex items-center gap-1 shadow">
+                                <span class="material-symbols-outlined text-sm">add_shopping_cart</span> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mens Item 1: Royal Gold Kada & Chain -->
+                <div class="product-item glass-panel inner-glow ambient-shadow overflow-hidden group fade-slide-up flex flex-col h-[480px] rounded-lg border border-primary/20 hover:border-primary transition-all duration-300" data-audience="mens" data-category="bangles">
+                    <div class="img-hover-container flex-grow relative cursor-pointer overflow-hidden" onclick="openQuickView('Royal Solid 22K Men\'s Gold Kada & Chain Set', 'Heavy 22K hallmarked solid men\'s gold kada with intricate geometric etching and matching thick curb link chain.', '₹1,65,000', 'assets/mens_kada_chain.jpg')">
+                        <div class="absolute inset-0 bg-cover bg-center img-hover-scale" style="background-image: url('assets/mens_kada_chain.jpg')"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
+                        
+                        <!-- Hover Action Overlay -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/40 backdrop-blur-[2px] z-20">
+                            <button onclick="event.stopPropagation(); openQuickView('Royal Solid 22K Men\'s Gold Kada & Chain Set', 'Heavy 22K hallmarked solid men\'s gold kada with intricate geometric etching and matching thick curb link chain.', '₹1,65,000', 'assets/mens_kada_chain.jpg')" class="px-5 py-2 bg-primary text-on-primary text-xs uppercase tracking-widest font-semibold hover:bg-primary-fixed transition-all shadow-lg flex items-center gap-1">
+                                Quick View
+                            </button>
+                        </div>
+                        <div class="absolute top-4 right-4 z-30">
+                            <button onclick="event.stopPropagation(); toggleWishlist('Men\'s Royal Gold Kada & Chain', '₹1,65,000', 'assets/mens_kada_chain.jpg')" class="p-2.5 bg-surface/80 rounded-full text-primary hover:bg-primary hover:text-on-primary transition-colors shadow-lg">
+                                <span class="material-symbols-outlined text-lg">favorite</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-5 bg-surface-container/90 backdrop-blur-md relative z-10 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] uppercase tracking-widest text-primary/80 font-bold block mb-1">Men's • Royal Edition</span>
+                            <h3 class="font-headline-md text-base text-primary mb-1 group-hover:text-primary-fixed transition-colors">Royal Men's Gold Kada & Chain</h3>
+                            <p class="font-body-md text-xs text-on-surface-variant mb-3 line-clamp-2">Heavy solid 22K hallmarked kada and curb chain.</p>
+                        </div>
+                        <div class="flex justify-between items-center pt-2 border-t border-outline-variant/30">
+                            <span class="font-headline-md text-primary font-bold text-base">₹1,65,000</span>
+                            <button onclick="addToCart('Men\'s Royal Gold Kada & Chain', '₹1,65,000', 'assets/mens_kada_chain.jpg')" class="px-3.5 py-2 bg-primary/10 border border-primary text-primary text-[10px] uppercase tracking-widest font-bold hover:bg-primary hover:text-on-primary transition-all flex items-center gap-1 shadow">
+                                <span class="material-symbols-outlined text-sm">add_shopping_cart</span> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mens Item 2: Lion Signet Ring -->
+                <div class="product-item glass-panel inner-glow ambient-shadow overflow-hidden group fade-slide-up flex flex-col h-[480px] rounded-lg border border-primary/20 hover:border-primary transition-all duration-300" data-audience="mens" data-category="bangles">
+                    <div class="img-hover-container flex-grow relative cursor-pointer overflow-hidden" onclick="openQuickView('Imperial Lion Embossed Ruby Signet Ring', 'Bold 22K men\'s royal gold signet ring featuring hand-embossed lion crest with ruby eyes.', '₹88,000', 'assets/mens_signet_ring.jpg')">
+                        <div class="absolute inset-0 bg-cover bg-center img-hover-scale" style="background-image: url('assets/mens_signet_ring.jpg')"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
+                        
+                        <!-- Hover Action Overlay -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/40 backdrop-blur-[2px] z-20">
+                            <button onclick="event.stopPropagation(); openQuickView('Imperial Lion Embossed Ruby Signet Ring', 'Bold 22K men\'s royal gold signet ring featuring hand-embossed lion crest with ruby eyes.', '₹88,000', 'assets/mens_signet_ring.jpg')" class="px-5 py-2 bg-primary text-on-primary text-xs uppercase tracking-widest font-semibold hover:bg-primary-fixed transition-all shadow-lg flex items-center gap-1">
+                                Quick View
+                            </button>
+                        </div>
+                        <div class="absolute top-4 right-4 z-30">
+                            <button onclick="event.stopPropagation(); toggleWishlist('Imperial Lion Signet Ring', '₹88,000', 'assets/mens_signet_ring.jpg')" class="p-2.5 bg-surface/80 rounded-full text-primary hover:bg-primary hover:text-on-primary transition-colors shadow-lg">
+                                <span class="material-symbols-outlined text-lg">favorite</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-5 bg-surface-container/90 backdrop-blur-md relative z-10 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] uppercase tracking-widest text-primary/80 font-bold block mb-1">Men's • Royal Signet</span>
+                            <h3 class="font-headline-md text-base text-primary mb-1 group-hover:text-primary-fixed transition-colors">Imperial Lion Ruby Signet Ring</h3>
+                            <p class="font-body-md text-xs text-on-surface-variant mb-3 line-clamp-2">Hand-embossed lion crest with natural ruby eyes.</p>
+                        </div>
+                        <div class="flex justify-between items-center pt-2 border-t border-outline-variant/30">
+                            <span class="font-headline-md text-primary font-bold text-base">₹88,000</span>
+                            <button onclick="addToCart('Imperial Lion Ruby Signet Ring', '₹88,000', 'assets/mens_signet_ring.jpg')" class="px-3.5 py-2 bg-primary/10 border border-primary text-primary text-[10px] uppercase tracking-widest font-bold hover:bg-primary hover:text-on-primary transition-all flex items-center gap-1 shadow">
+                                <span class="material-symbols-outlined text-sm">add_shopping_cart</span> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mens Item 3: Cuban Link Gold Bracelet -->
+                <div class="product-item glass-panel inner-glow ambient-shadow overflow-hidden group fade-slide-up flex flex-col h-[480px] rounded-lg border border-primary/20 hover:border-primary transition-all duration-300" data-audience="mens" data-category="bangles">
+                    <div class="img-hover-container flex-grow relative cursor-pointer overflow-hidden" onclick="openQuickView('Heavy 22K Men\'s Cuban Link Gold Bracelet', 'Solid 22K yellow gold heavy Cuban link bracelet with custom safety lock and satin finish.', '₹1,45,000', 'assets/mens_gold_bracelet.jpg')">
+                        <div class="absolute inset-0 bg-cover bg-center img-hover-scale" style="background-image: url('assets/mens_gold_bracelet.jpg')"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
+                        
+                        <!-- Hover Action Overlay -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/40 backdrop-blur-[2px] z-20">
+                            <button onclick="event.stopPropagation(); openQuickView('Heavy 22K Men\'s Cuban Link Gold Bracelet', 'Solid 22K yellow gold heavy Cuban link bracelet with custom safety lock and satin finish.', '₹1,45,000', 'assets/mens_gold_bracelet.jpg')" class="px-5 py-2 bg-primary text-on-primary text-xs uppercase tracking-widest font-semibold hover:bg-primary-fixed transition-all shadow-lg flex items-center gap-1">
+                                Quick View
+                            </button>
+                        </div>
+                        <div class="absolute top-4 right-4 z-30">
+                            <button onclick="event.stopPropagation(); toggleWishlist('Men\'s Cuban Link Gold Bracelet', '₹1,45,000', 'assets/mens_gold_bracelet.jpg')" class="p-2.5 bg-surface/80 rounded-full text-primary hover:bg-primary hover:text-on-primary transition-colors shadow-lg">
+                                <span class="material-symbols-outlined text-lg">favorite</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-5 bg-surface-container/90 backdrop-blur-md relative z-10 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] uppercase tracking-widest text-primary/80 font-bold block mb-1">Men's • Cuban Link</span>
+                            <h3 class="font-headline-md text-base text-primary mb-1 group-hover:text-primary-fixed transition-colors">Men's Cuban Link Gold Bracelet</h3>
+                            <p class="font-body-md text-xs text-on-surface-variant mb-3 line-clamp-2">Solid 22K yellow gold heavy Cuban link bracelet.</p>
+                        </div>
+                        <div class="flex justify-between items-center pt-2 border-t border-outline-variant/30">
+                            <span class="font-headline-md text-primary font-bold text-base">₹1,45,000</span>
+                            <button onclick="addToCart('Men\'s Cuban Link Gold Bracelet', '₹1,45,000', 'assets/mens_gold_bracelet.jpg')" class="px-3.5 py-2 bg-primary/10 border border-primary text-primary text-[10px] uppercase tracking-widest font-bold hover:bg-primary hover:text-on-primary transition-all flex items-center gap-1 shadow">
+                                <span class="material-symbols-outlined text-sm">add_shopping_cart</span> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kids: Baby Elephant Nazariya -->
+                <div class="product-item glass-panel inner-glow ambient-shadow overflow-hidden group fade-slide-up flex flex-col h-[480px] rounded-lg border border-primary/20 hover:border-primary transition-all duration-300" data-audience="kids" data-category="bangles">
+                    <div class="img-hover-container flex-grow relative cursor-pointer overflow-hidden" onclick="openQuickView('Gold Baby Elephant Nazariya Bracelet', 'Handcrafted 22K gold baby protection Nazariya with genuine black onyx protection beads and carved elephant charm.', '₹32,500', 'assets/kids_nazariya.jpg')">
+                        <div class="absolute inset-0 bg-cover bg-center img-hover-scale" style="background-image: url('assets/kids_nazariya.jpg')"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
+                        
+                        <!-- Hover Action Overlay -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/40 backdrop-blur-[2px] z-20">
+                            <button onclick="event.stopPropagation(); openQuickView('Gold Baby Elephant Nazariya Bracelet', 'Handcrafted 22K gold baby protection Nazariya with genuine black onyx protection beads and carved elephant charm.', '₹32,500', 'assets/kids_nazariya.jpg')" class="px-5 py-2 bg-primary text-on-primary text-xs uppercase tracking-widest font-semibold hover:bg-primary-fixed transition-all shadow-lg flex items-center gap-1">
+                                Quick View
+                            </button>
+                        </div>
+                        <div class="absolute top-4 right-4 z-30">
+                            <button onclick="event.stopPropagation(); toggleWishlist('Gold Baby Elephant Nazariya', '₹32,500', 'assets/kids_nazariya.jpg')" class="p-2.5 bg-surface/80 rounded-full text-primary hover:bg-primary hover:text-on-primary transition-colors shadow-lg">
+                                <span class="material-symbols-outlined text-lg">favorite</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-5 bg-surface-container/90 backdrop-blur-md relative z-10 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] uppercase tracking-widest text-primary/80 font-bold block mb-1">Children's • 22K Gold</span>
+                            <h3 class="font-headline-md text-base text-primary mb-1 group-hover:text-primary-fixed transition-colors">Gold Elephant Baby Nazariya</h3>
+                            <p class="font-body-md text-xs text-on-surface-variant mb-3 line-clamp-2">Protection black beads with carved elephant charm.</p>
+                        </div>
+                        <div class="flex justify-between items-center pt-2 border-t border-outline-variant/30">
+                            <span class="font-headline-md text-primary font-bold text-base">₹32,500</span>
+                            <button onclick="addToCart('Gold Elephant Baby Nazariya', '₹32,500', 'assets/kids_nazariya.jpg')" class="px-3.5 py-2 bg-primary/10 border border-primary text-primary text-[10px] uppercase tracking-widest font-bold hover:bg-primary hover:text-on-primary transition-all flex items-center gap-1 shadow">
+                                <span class="material-symbols-outlined text-sm">add_shopping_cart</span> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Womens: Polki Chandbali Earrings -->
+                <div class="product-item glass-panel inner-glow ambient-shadow overflow-hidden group fade-slide-up flex flex-col h-[480px] rounded-lg border border-primary/20 hover:border-primary transition-all duration-300" data-audience="womens" data-category="earrings">
+                    <div class="img-hover-container flex-grow relative cursor-pointer overflow-hidden" onclick="openQuickView('Polki Diamond Chandbali Earrings', 'Handcrafted Polki uncut diamond Chandbalis with seed pearls and ruby droplets.', '₹1,25,000', 'assets/chandbali_earrings.jpg')">
+                        <div class="absolute inset-0 bg-cover bg-center img-hover-scale" style="background-image: url('assets/chandbali_earrings.jpg')"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
+                        
+                        <!-- Hover Action Overlay -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/40 backdrop-blur-[2px] z-20">
+                            <button onclick="event.stopPropagation(); openQuickView('Polki Diamond Chandbali Earrings', 'Handcrafted Polki uncut diamond Chandbalis with seed pearls and ruby droplets.', '₹1,25,000', 'assets/chandbali_earrings.jpg')" class="px-5 py-2 bg-primary text-on-primary text-xs uppercase tracking-widest font-semibold hover:bg-primary-fixed transition-all shadow-lg flex items-center gap-1">
+                                Quick View
+                            </button>
+                        </div>
+                        <div class="absolute top-4 right-4 z-30">
+                            <button onclick="event.stopPropagation(); toggleWishlist('Polki Diamond Chandbali Earrings', '₹1,25,000', 'assets/chandbali_earrings.jpg')" class="p-2.5 bg-surface/80 rounded-full text-primary hover:bg-primary hover:text-on-primary transition-colors shadow-lg">
+                                <span class="material-symbols-outlined text-lg">favorite</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-5 bg-surface-container/90 backdrop-blur-md relative z-10 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] uppercase tracking-widest text-primary/80 font-bold block mb-1">Women's • Uncut Diamonds</span>
+                            <h3 class="font-headline-md text-base text-primary mb-1 group-hover:text-primary-fixed transition-colors">Polki Chandbali Earrings</h3>
+                            <p class="font-body-md text-xs text-on-surface-variant mb-3 line-clamp-2">Moon-shaped regal Chandbalis with pearls.</p>
+                        </div>
+                        <div class="flex justify-between items-center pt-2 border-t border-outline-variant/30">
+                            <span class="font-headline-md text-primary font-bold text-base">₹1,25,000</span>
+                            <button onclick="addToCart('Polki Chandbali Earrings', '₹1,25,000', 'assets/chandbali_earrings.jpg')" class="px-3.5 py-2 bg-primary/10 border border-primary text-primary text-[10px] uppercase tracking-widest font-bold hover:bg-primary hover:text-on-primary transition-all flex items-center gap-1 shadow">
+                                <span class="material-symbols-outlined text-sm">add_shopping_cart</span> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Womens: Peacock Nakshi Gold Kadas -->
+                <div class="product-item glass-panel inner-glow ambient-shadow overflow-hidden group fade-slide-up flex flex-col h-[480px] rounded-lg border border-primary/20 hover:border-primary transition-all duration-300" data-audience="womens" data-category="bangles">
+                    <div class="img-hover-container flex-grow relative cursor-pointer overflow-hidden" onclick="openQuickView('Peacock Nakshi Gold Kadas', 'Solid 22K gold kada bangles hand-carved with traditional peacock Nakshi motifs.', '₹1,95,000', 'assets/temple_bangles.jpg')">
+                        <div class="absolute inset-0 bg-cover bg-center img-hover-scale" style="background-image: url('assets/temple_bangles.jpg')"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
+                        
+                        <!-- Hover Action Overlay -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/40 backdrop-blur-[2px] z-20">
+                            <button onclick="event.stopPropagation(); openQuickView('Peacock Nakshi Gold Kadas', 'Solid 22K gold kada bangles hand-carved with traditional peacock Nakshi motifs.', '₹1,95,000', 'assets/temple_bangles.jpg')" class="px-5 py-2 bg-primary text-on-primary text-xs uppercase tracking-widest font-semibold hover:bg-primary-fixed transition-all shadow-lg flex items-center gap-1">
+                                Quick View
+                            </button>
+                        </div>
+                        <div class="absolute top-4 right-4 z-30">
+                            <button onclick="event.stopPropagation(); toggleWishlist('Peacock Nakshi Gold Kadas', '₹1,95,000', 'assets/temple_bangles.jpg')" class="p-2.5 bg-surface/80 rounded-full text-primary hover:bg-primary hover:text-on-primary transition-colors shadow-lg">
+                                <span class="material-symbols-outlined text-lg">favorite</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-5 bg-surface-container/90 backdrop-blur-md relative z-10 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] uppercase tracking-widest text-primary/80 font-bold block mb-1">Women's • Nakshi Carving</span>
+                            <h3 class="font-headline-md text-base text-primary mb-1 group-hover:text-primary-fixed transition-colors">Peacock Nakshi Gold Kadas</h3>
+                            <p class="font-body-md text-xs text-on-surface-variant mb-3 line-clamp-2">Intricate artisan gold bangles pair.</p>
+                        </div>
+                        <div class="flex justify-between items-center pt-2 border-t border-outline-variant/30">
+                            <span class="font-headline-md text-primary font-bold text-base">₹1,95,000</span>
+                            <button onclick="addToCart('Peacock Nakshi Gold Kadas', '₹1,95,000', 'assets/temple_bangles.jpg')" class="px-3.5 py-2 bg-primary/10 border border-primary text-primary text-[10px] uppercase tracking-widest font-bold hover:bg-primary hover:text-on-primary transition-all flex items-center gap-1 shadow">
+                                <span class="material-symbols-outlined text-sm">add_shopping_cart</span> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Womens: Floral Diamond Mangalsutra -->
+                <div class="product-item glass-panel inner-glow ambient-shadow overflow-hidden group fade-slide-up flex flex-col h-[480px] rounded-lg border border-primary/20 hover:border-primary transition-all duration-300" data-audience="womens" data-category="mangalsutra">
+                    <div class="img-hover-container flex-grow relative cursor-pointer overflow-hidden" onclick="openQuickView('Floral Diamond Solitaire Mangalsutra', 'Crafted with black onyx crystal beads and VVS diamond floral cluster central piece.', '₹1,35,000', 'assets/diamond_mangalsutra.jpg')">
+                        <div class="absolute inset-0 bg-cover bg-center img-hover-scale" style="background-image: url('assets/diamond_mangalsutra.jpg')"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
+                        
+                        <!-- Hover Action Overlay -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/40 backdrop-blur-[2px] z-20">
+                            <button onclick="event.stopPropagation(); openQuickView('Floral Diamond Solitaire Mangalsutra', 'Crafted with black onyx crystal beads and VVS diamond floral cluster central piece.', '₹1,35,000', 'assets/diamond_mangalsutra.jpg')" class="px-5 py-2 bg-primary text-on-primary text-xs uppercase tracking-widest font-semibold hover:bg-primary-fixed transition-all shadow-lg flex items-center gap-1">
+                                Quick View
+                            </button>
+                        </div>
+                        <div class="absolute top-4 right-4 z-30">
+                            <button onclick="event.stopPropagation(); toggleWishlist('Floral Diamond Solitaire Mangalsutra', '₹1,35,000', 'assets/diamond_mangalsutra.jpg')" class="p-2.5 bg-surface/80 rounded-full text-primary hover:bg-primary hover:text-on-primary transition-colors shadow-lg">
+                                <span class="material-symbols-outlined text-lg">favorite</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-5 bg-surface-container/90 backdrop-blur-md relative z-10 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] uppercase tracking-widest text-primary/80 font-bold block mb-1">Women's • VVS Diamond</span>
+                            <h3 class="font-headline-md text-base text-primary mb-1 group-hover:text-primary-fixed transition-colors">Floral Diamond Mangalsutra</h3>
+                            <p class="font-body-md text-xs text-on-surface-variant mb-3 line-clamp-2">Modern sacred luxury with sparkling diamonds.</p>
+                        </div>
+                        <div class="flex justify-between items-center pt-2 border-t border-outline-variant/30">
+                            <span class="font-headline-md text-primary font-bold text-base">₹1,35,000</span>
+                            <button onclick="addToCart('Floral Diamond Mangalsutra', '₹1,35,000', 'assets/diamond_mangalsutra.jpg')" class="px-3.5 py-2 bg-primary/10 border border-primary text-primary text-[10px] uppercase tracking-widest font-bold hover:bg-primary hover:text-on-primary transition-all flex items-center gap-1 shadow">
+                                <span class="material-symbols-outlined text-sm">add_shopping_cart</span> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bridal Couture Section -->
+        <section id="bridal" class="relative py-section-gap bg-surface-container-low overflow-hidden">
+            <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="fade-slide-up">
+                    <span class="font-label-caps text-xs text-primary tracking-[0.3em] uppercase mb-4 block">Bespoke Bridal Elegance</span>
+                    <h2 class="font-headline-xl text-3xl md:text-5xl text-on-surface mb-6 leading-tight">
+                        Crafted for Your Royal Day
+                    </h2>
+                    <p class="font-body-lg text-sm md:text-base text-on-surface-variant mb-8 leading-relaxed">
+                        Every bride deserves a royal heirloom. Our bespoke bridal suite pairs century-old goldsmith techniques with custom consultations to craft one-of-a-kind wedding sets that live across generations.
+                    </p>
+                    <div class="grid grid-cols-2 gap-6 mb-8 border-y border-outline-variant/30 py-6">
+                        <div>
+                            <span class="font-headline-xl text-2xl text-primary block">100% BIS Hallmarked</span>
+                            <span class="text-xs text-on-surface-variant">Certified Pure Gold & Gemstones</span>
+                        </div>
+                        <div>
+                            <span class="font-headline-xl text-2xl text-primary block">Custom Goldsmithing</span>
+                            <span class="text-xs text-on-surface-variant">Bespoke Couture Design</span>
+                        </div>
+                    </div>
+                    <button id="btn-bridal-consult" class="px-8 py-4 bg-primary text-on-primary font-label-caps text-xs uppercase tracking-[0.2em] font-semibold hover:bg-primary-fixed transition-colors">
+                        Reserve Private Consultation
+                    </button>
+                </div>
+                <div class="relative fade-slide-up">
+                    <div class="glass-panel p-3 border border-primary/30 rounded-lg shadow-2xl relative z-10">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCeiWrh-9udS9ewuTp0ou_jEZg0WvChEfByPSOHR2slTE-bKhhsZGRPjcBOhoB9FWSxRgkdScUjDwnpKv3gT9I_J3tEcCjKJdgGIDohYwuFO1ZcywDiLcCwRHLU_KakqWyqo2EeO5wIdK6pHTsDoTn0eLUOv-v75jkvMBnvofQcaxJeC4k3I65w9YHfZHGHjwP2QJj9sOXuWP7w4H10_EdRjnMFYswsepLLx_xb5JWZIpeiMqRZ5hX" alt="Bridal Collection" class="w-full h-[500px] object-cover rounded">
+                    </div>
+                    <div class="absolute -bottom-6 -left-6 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Heritage & Craftsmanship Story -->
+        <section id="heritage" class="py-section-gap px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto text-center">
+            <div class="max-w-3xl mx-auto fade-slide-up">
+                <span class="font-label-caps text-xs text-primary tracking-[0.3em] uppercase mb-3 block">Our Heritage</span>
+                <h2 class="font-headline-xl text-3xl md:text-5xl text-on-surface mb-6">Four Generations of Excellence</h2>
+                <p class="font-body-lg text-sm md:text-base text-on-surface-variant leading-relaxed mb-10">
+                    Founded with a passion for preserving India’s rich jewel art, Vaishnavi Alankar stands as a monument to luxury, purity, and artistic mastery. Each gem is ethically sourced, each gold curve hand-engraved by master karigars.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+                <div class="glass-panel p-8 inner-glow text-left fade-slide-up">
+                    <span class="material-symbols-outlined text-3xl text-primary mb-4">verified</span>
+                    <h3 class="font-headline-md text-xl text-on-surface mb-2">Uncompromising Purity</h3>
+                    <p class="text-xs text-on-surface-variant leading-relaxed">Guaranteed 22K 916 BIS Hallmark purity tested with x-ray fluorescence technology.</p>
+                </div>
+                <div class="glass-panel p-8 inner-glow text-left fade-slide-up">
+                    <span class="material-symbols-outlined text-3xl text-primary mb-4">palette</span>
+                    <h3 class="font-headline-md text-xl text-on-surface mb-2">Karigar Artistry</h3>
+                    <p class="text-xs text-on-surface-variant leading-relaxed">Handcrafted by master artisans with traditional Meenakari, Kundan, and Nakshi techniques.</p>
+                </div>
+                <div class="glass-panel p-8 inner-glow text-left fade-slide-up">
+                    <span class="material-symbols-outlined text-3xl text-primary mb-4">loyalty</span>
+                    <h3 class="font-headline-md text-xl text-on-surface mb-2">Lifetime Exchange</h3>
+                    <p class="text-xs text-on-surface-variant leading-relaxed">Complete transparency with guaranteed buyback and lifetime cleaning maintenance.</p>
+            </div>
+        </section>
+
+        <!-- Official VIP Store Appointment Pamphlet & Concierge Pass Section -->
+        <section id="pamphlet-section" class="py-20 bg-background border-t border-primary/20 relative overflow-hidden">
+            <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+                <div class="text-center mb-12 fade-slide-up">
+                    <span class="font-label-caps text-xs text-primary tracking-[0.3em] uppercase mb-2 block">Official Store Invitation</span>
+                    <h2 class="font-headline-xl text-3xl md:text-5xl text-on-surface">VIP Store Appointment Pamphlet</h2>
+                    <p class="text-sm text-on-surface-variant max-w-xl mx-auto mt-3">Present this official invitation pass at our flagship boutique or connect directly with our senior store workers.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                    <!-- Pamphlet Visual Display Card -->
+                    <div class="lg:col-span-6 flex justify-center fade-slide-up">
+                        <div onclick="openPamphletModal()" class="glass-panel p-3 border border-primary/40 rounded-xl ambient-shadow cursor-pointer group relative max-w-md w-full overflow-hidden hover:border-primary transition-all duration-500 hover:scale-[1.02]">
+                            <img src="assets/appointment_pamphlet.jpg" alt="Vaishnavi Alankar VIP Store Appointment Pamphlet" class="w-full h-auto rounded-lg shadow-2xl transition-transform duration-700 group-hover:scale-105">
+                            <div class="absolute inset-0 bg-black/40 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-3">
+                                <span class="material-symbols-outlined text-4xl text-primary animate-bounce">zoom_in</span>
+                                <span class="px-5 py-2.5 bg-primary text-on-primary font-label-caps text-xs uppercase tracking-widest font-bold shadow-xl">Click to Expand VIP Pamphlet</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Store Workers & Boutique Details Card -->
+                    <div class="lg:col-span-6 space-y-6 fade-slide-up">
+                        <div class="glass-panel p-6 md:p-8 inner-glow border border-primary/30 rounded-xl space-y-6">
+                            <div>
+                                <span class="text-[10px] uppercase tracking-[0.25em] text-primary font-bold block mb-1">Direct Boutique Contacts</span>
+                                <h3 class="font-headline-md text-2xl text-on-surface">Store Craftsmen & Specialists</h3>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="p-4 bg-surface-container/80 border border-outline-variant/30 rounded-lg flex items-start gap-4 hover:border-primary/50 transition-colors">
+                                    <div class="p-3 bg-primary/10 rounded-full text-primary">
+                                        <span class="material-symbols-outlined text-2xl">engineering</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-[10px] uppercase tracking-widest text-primary font-bold block">Senior Master Goldsmith</span>
+                                        <h4 class="font-headline-md text-base text-on-surface font-bold">Pradeep Pandit</h4>
+                                        <a href="tel:+918956419960" class="inline-flex items-center gap-1.5 text-xs text-primary font-bold mt-2 hover:underline">
+                                            <span class="material-symbols-outlined text-sm">call</span> 📞 8956419960
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="p-4 bg-surface-container/80 border border-outline-variant/30 rounded-lg flex items-start gap-4 hover:border-primary/50 transition-colors">
+                                    <div class="p-3 bg-primary/10 rounded-full text-primary">
+                                        <span class="material-symbols-outlined text-2xl">diamond</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-[10px] uppercase tracking-widest text-primary font-bold block">Bridal & Solitaire Specialist</span>
+                                        <h4 class="font-headline-md text-base text-on-surface font-bold">Harshvardhan Pandit</h4>
+                                        <a href="tel:+919021715564" class="inline-flex items-center gap-1.5 text-xs text-primary font-bold mt-2 hover:underline">
+                                            <span class="material-symbols-outlined text-sm">call</span> 📞 9021715564
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pt-4 border-t border-outline-variant/30 text-xs text-on-surface-variant space-y-2">
+                                <p class="flex items-start gap-2"><span class="material-symbols-outlined text-primary text-base mt-0.5">location_on</span> <span><strong>Address:</strong> Shop No. 1, Malang Galli, Near Saraf Lane, Sawe Wadi, Latur, Maharashtra – 413512</span></p>
+                                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">schedule</span> <strong>Visiting Hours:</strong> Tuesday – Sunday | 11:00 AM – 7:30 PM</p>
+                            </div>
+
+                            <div class="flex flex-wrap gap-4 pt-2">
+                                <button onclick="openPamphletModal()" class="px-6 py-3.5 bg-primary text-on-primary font-label-caps text-xs uppercase tracking-widest font-bold hover:bg-primary-fixed transition-colors flex items-center gap-2 shadow-lg">
+                                    <span class="material-symbols-outlined text-sm">article</span> View Full Pamphlet
+                                </button>
+                                <button onclick="openAppointmentModal()" class="px-6 py-3.5 bg-transparent border border-primary text-primary font-label-caps text-xs uppercase tracking-widest font-bold hover:bg-primary hover:text-on-primary transition-colors flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">event</span> Book Private Viewing
+                                </button>
+                                <a href="https://wa.me/918956419960" target="_blank" class="px-6 py-3.5 bg-[#25D366]/20 border border-[#25D366] text-[#25D366] font-label-caps text-xs uppercase tracking-widest font-bold hover:bg-[#25D366] hover:text-white transition-all flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">chat</span> WhatsApp Concierge
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter & Contact -->
+        <section id="contact" class="py-20 bg-surface-container/60 border-t border-outline-variant/30">
+            <div class="max-w-2xl mx-auto px-margin-mobile text-center fade-slide-up">
+                <span class="font-label-caps text-xs text-primary tracking-[0.3em] uppercase mb-2 block">Private Circle</span>
+                <h2 class="font-headline-xl text-3xl text-on-surface mb-4">Join the Royal Privilege Club</h2>
+                <p class="text-xs text-on-surface-variant mb-8">Subscribe to receive private invitations to new collection unveilings and VIP private viewings.</p>
+                
+                <form id="newsletter-form" class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                    <input type="email" required placeholder="Enter your email address" class="input-glass flex-grow py-3 px-4 text-xs text-on-surface placeholder:text-outline border-b border-outline focus:border-primary">
+                    <button type="submit" class="px-8 py-3 bg-primary text-on-primary font-label-caps text-xs uppercase tracking-widest font-semibold hover:bg-primary-fixed transition-colors">
+                        Subscribe
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-surface border-t border-outline-variant/40 grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-mobile md:px-margin-desktop py-16 w-full text-xs">
+        <div class="fade-slide-up">
+            <h4 class="font-headline-md text-2xl text-primary mb-4 flex items-center gap-3">
+                <img src="assets/logo.jpg" alt="Vaishnavi Alankar Logo" class="h-8 w-auto object-contain rounded">
+                VAISHNAVI ALANKAR
+            </h4>
+            <p class="text-on-surface-variant mb-4 leading-relaxed">Exclusive Luxury Jewellery Boutique. Celebrating life’s golden moments with timeless artistry.</p>
+            <p class="text-on-surface-variant/70">© 2026 VAISHNAVI ALANKAR. ALL RIGHTS RESERVED.</p>
+        </div>
+        <div class="fade-slide-up">
+            <h5 class="font-label-caps text-on-surface uppercase tracking-widest mb-4 font-semibold text-primary">Explore</h5>
+            <ul class="space-y-2 text-on-surface-variant">
+                <li><a href="#collections" class="hover:text-primary transition-colors">Featured Collections</a></li>
+                <li><a href="#bridal" class="hover:text-primary transition-colors">Bridal Couture</a></li>
+                <li><a href="#heritage" class="hover:text-primary transition-colors">Heritage & Craftsmanship</a></li>
+            </ul>
+        </div>
+        <div class="fade-slide-up">
+            <h5 class="font-label-caps text-on-surface uppercase tracking-widest mb-4 font-semibold text-primary">Client Services</h5>
+            <ul class="space-y-2 text-on-surface-variant">
+                <li><a href="#" onclick="openAppointmentModal(); return false;" class="hover:text-primary transition-colors">Book Private Appointment</a></li>
+                <li><a href="#" onclick="handleServiceClick('Jewellery Care Guide'); return false;" class="hover:text-primary transition-colors">Jewellery Care Guide</a></li>
+                <li><a href="#" onclick="handleServiceClick('Certificate Verification'); return false;" class="hover:text-primary transition-colors">Certificate Verification</a></li>
+                <li><a href="#" onclick="handleServiceClick('Returns & Exchange Policy'); return false;" class="hover:text-primary transition-colors">Returns & Exchange Policy</a></li>
+            </ul>
+        </div>
+        <div class="fade-slide-up">
+            <h5 class="font-label-caps text-on-surface uppercase tracking-widest mb-4 font-semibold text-primary">Connect</h5>
+            <p class="text-on-surface-variant mb-2">Shop No. 1, Malang Galli, Near Saraf Lane, Sawe Wadi, Latur, Maharashtra – 413512</p>
+            <p class="text-on-surface-variant mb-1"><strong>Senior Master Goldsmith:</strong> Pradeep Pandit (📞 8956419960)</p>
+            <p class="text-on-surface-variant mb-4"><strong>Bridal & Solitaire Specialist:</strong> Harshvardhan Pandit (📞 9021715564)</p>
+            <div class="flex space-x-4 text-primary">
+                <a href="#" onclick="handleServiceClick('Social Sharing'); return false;" aria-label="Share page" class="hover:text-primary-fixed transition-colors"><span class="material-symbols-outlined">share</span></a>
+                <a href="mailto:concierge@vaishnavialankar.com" aria-label="Email Concierge" class="hover:text-primary-fixed transition-colors"><span class="material-symbols-outlined">mail</span></a>
+                <a href="#pamphlet-section" aria-label="Boutique Location" class="hover:text-primary-fixed transition-colors"><span class="material-symbols-outlined">location_on</span></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Shopping Cart Drawer -->
+    <div id="cart-drawer" role="dialog" aria-modal="true" aria-label="Shopping Bag" class="fixed inset-0 z-50 pointer-events-none transition-opacity duration-300 opacity-0">
+        <div id="cart-backdrop" class="absolute inset-0 bg-black/70 backdrop-blur-sm cursor-pointer"></div>
+        <div class="absolute top-0 right-0 h-full w-full max-w-md bg-surface-container-high border-l border-primary/30 p-6 flex flex-col justify-between transform translate-x-full transition-transform duration-300 ease-out shadow-2xl">
+            <div>
+                <div class="flex justify-between items-center pb-4 border-b border-outline-variant/30">
+                    <h3 class="font-headline-md text-xl text-primary flex items-center gap-2">
+                        <span class="material-symbols-outlined">shopping_bag</span> Shopping Bag
+                    </h3>
+                    <button id="btn-cart-close" class="text-on-surface-variant hover:text-primary">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <div id="cart-items-container" class="py-6 space-y-4 max-h-[60vh] overflow-y-auto">
+                    <!-- Cart items rendered dynamically -->
+                    <p class="text-xs text-on-surface-variant text-center py-8">Your shopping bag is currently empty.</p>
+                </div>
+            </div>
+            <div class="pt-4 border-t border-outline-variant/30">
+                <div class="flex justify-between items-center mb-4 text-sm font-semibold">
+                    <span class="text-on-surface-variant">Subtotal:</span>
+                    <span id="cart-subtotal" class="text-primary font-headline-md text-lg">₹0</span>
+                </div>
+                <button onclick="alert('Proceeding to Secure Royal Checkout...')" class="w-full py-3 bg-primary text-on-primary font-label-caps text-xs uppercase tracking-widest font-semibold hover:bg-primary-fixed transition-colors">
+                    Proceed to Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wishlist Drawer -->
+    <div id="wishlist-drawer" role="dialog" aria-modal="true" aria-label="Wishlist" class="fixed inset-0 z-50 pointer-events-none transition-opacity duration-300 opacity-0">
+        <div id="wishlist-backdrop" class="absolute inset-0 bg-black/70 backdrop-blur-sm cursor-pointer"></div>
+        <div class="absolute top-0 right-0 h-full w-full max-w-md bg-surface-container-high border-l border-primary/30 p-6 flex flex-col justify-between transform translate-x-full transition-transform duration-300 ease-out shadow-2xl">
+            <div>
+                <div class="flex justify-between items-center pb-4 border-b border-outline-variant/30">
+                    <h3 class="font-headline-md text-xl text-primary flex items-center gap-2">
+                        <span class="material-symbols-outlined">favorite</span> Saved Wishlist
+                    </h3>
+                    <button id="btn-wishlist-close" class="text-on-surface-variant hover:text-primary">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <div id="wishlist-items-container" class="py-6 space-y-4 max-h-[65vh] overflow-y-auto">
+                    <!-- Wishlist items rendered dynamically -->
+                    <p class="text-xs text-on-surface-variant text-center py-8">Your wishlist is currently empty.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick View Modal -->
+    <div id="quickview-modal" role="dialog" aria-modal="true" aria-label="Product Quick View" class="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none opacity-0 transition-opacity duration-300">
+        <div id="quickview-backdrop" class="absolute inset-0 bg-black/80 backdrop-blur-md cursor-pointer"></div>
+        <div class="relative bg-surface-container-high border border-primary/30 max-w-2xl w-full p-6 md:p-8 rounded-lg shadow-2xl transform scale-95 transition-transform duration-300 z-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <button id="btn-quickview-close" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <div class="overflow-hidden rounded border border-outline-variant/40">
+                <img id="qv-image" src="" alt="Product" class="w-full h-64 md:h-full object-cover">
+            </div>
+            <div class="flex flex-col justify-between">
+                <div>
+                    <span class="text-[10px] uppercase tracking-widest text-primary font-bold block mb-1">Exclusive Masterpiece</span>
+                    <h3 id="qv-title" class="font-headline-md text-2xl text-primary mb-2"></h3>
+                    <p id="qv-price" class="font-headline-md text-xl text-on-surface mb-3 font-bold"></p>
+                    <p id="qv-desc" class="text-xs text-on-surface-variant leading-relaxed mb-6"></p>
+                </div>
+                <div class="flex gap-3">
+                    <button id="qv-add-cart" class="flex-1 py-3 bg-primary text-on-primary font-label-caps text-xs uppercase tracking-widest font-semibold hover:bg-primary-fixed transition-colors">
+                        Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Appointment Booking & Store Workers Contact Modal -->
+    <div id="appointment-modal" role="dialog" aria-modal="true" aria-label="Book Appointment" class="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none opacity-0 transition-opacity duration-300">
+        <div id="appointment-backdrop" class="absolute inset-0 bg-black/80 backdrop-blur-md cursor-pointer"></div>
+        <div class="relative bg-surface-container-high border border-primary/30 max-w-xl w-full p-6 md:p-8 rounded-lg shadow-2xl transform scale-95 transition-transform duration-300 z-10 max-h-[90vh] overflow-y-auto">
+            <button id="btn-appointment-close" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary p-2">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <div class="text-center mb-6">
+                <span class="font-label-caps text-[10px] text-primary tracking-[0.25em] uppercase mb-1 block">VIP Concierge & Direct Contact</span>
+                <h3 class="font-headline-md text-2xl text-on-surface">Store Workers & Appointment Booking</h3>
+                <p class="text-xs text-on-surface-variant mt-1">Connect directly with our master craftsmen or reserve a private 1-on-1 boutique viewing.</p>
+            </div>
+
+            <!-- Direct Store Workers Contact Cards -->
+            <div class="mb-6 p-4 bg-surface-container border border-primary/20 rounded-lg space-y-3">
+                <span class="text-[10px] uppercase tracking-widest text-primary font-bold block mb-2">Direct Store Contacts</span>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                    <div class="p-3 bg-surface-container-low border border-outline-variant/30 rounded flex items-start gap-2">
+                        <span class="material-symbols-outlined text-primary text-base">person</span>
+                        <div>
+                            <span class="text-[10px] text-primary font-bold block uppercase tracking-wider">Senior Master Goldsmith</span>
+                            <span class="font-bold text-on-surface block text-sm">Pradeep Pandit</span>
+                            <a href="tel:+918956419960" class="text-primary hover:underline font-bold block mt-1">📞 8956419960</a>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-surface-container-low border border-outline-variant/30 rounded flex items-start gap-2">
+                        <span class="material-symbols-outlined text-primary text-base">person</span>
+                        <div>
+                            <span class="text-[10px] text-primary font-bold block uppercase tracking-wider">Bridal & Solitaire Specialist</span>
+                            <span class="font-bold text-on-surface block text-sm">Harshvardhan Pandit</span>
+                            <a href="tel:+919021715564" class="text-primary hover:underline font-bold block mt-1">📞 9021715564</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-wrap justify-between items-center pt-2 border-t border-outline-variant/20 text-xs">
+                    <span class="text-on-surface-variant text-[11px]">📍 Shop No. 1, Malang Galli, Near Saraf Lane, Sawe Wadi, Latur, Maharashtra – 413512</span>
+                    <a href="https://wa.me/918956419960" target="_blank" class="inline-flex items-center gap-1 text-primary hover:text-primary-fixed font-bold">
+                        <span class="material-symbols-outlined text-sm">chat</span> WhatsApp Concierge
+                    </a>
+                </div>
+            </div>
+
+            <!-- Booking Form -->
+            <form id="appointment-form" class="space-y-4">
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-on-surface-variant mb-1">Full Name</label>
+                    <input type="text" required placeholder="Enter your name" class="w-full bg-surface-container border border-outline-variant p-3 text-xs text-on-surface focus:border-primary outline-none rounded">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-on-surface-variant mb-1">Phone Number</label>
+                        <input type="tel" required placeholder="8956419960" class="w-full bg-surface-container border border-outline-variant p-3 text-xs text-on-surface focus:border-primary outline-none rounded">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-on-surface-variant mb-1">Select Contact Person</label>
+                        <select class="w-full bg-surface-container border border-outline-variant p-3 text-xs text-on-surface focus:border-primary outline-none rounded">
+                            <option>Pradeep Pandit (Senior Master Goldsmith)</option>
+                            <option>Harshvardhan Pandit (Bridal & Solitaire Specialist)</option>
+                            <option>General Concierge Team</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-on-surface-variant mb-1">Preferred Date</label>
+                        <input type="date" required class="w-full bg-surface-container border border-outline-variant p-3 text-xs text-on-surface focus:border-primary outline-none rounded">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-on-surface-variant mb-1">Interest</label>
+                        <select class="w-full bg-surface-container border border-outline-variant p-3 text-xs text-on-surface focus:border-primary outline-none rounded">
+                            <option>Bridal Collection</option>
+                            <option>Antique Gold</option>
+                            <option>Men's Royal Collection</option>
+                            <option>Children's Nazariya & Gold</option>
+                            <option>Diamond Solitaires</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="w-full mt-4 py-3.5 bg-primary text-on-primary font-label-caps text-xs uppercase tracking-widest font-semibold hover:bg-primary-fixed transition-colors rounded shadow-lg">
+                    Confirm Appointment Request
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dedicated VIP Store Pamphlet Modal -->
+    <div id="pamphlet-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none opacity-0 transition-opacity duration-300">
+        <div id="pamphlet-backdrop" onclick="closePamphletModal()" class="absolute inset-0 bg-black/85 backdrop-blur-md cursor-pointer"></div>
+        <div class="relative bg-surface-container-high border border-primary/40 max-w-2xl w-full p-4 md:p-6 rounded-xl shadow-2xl transform scale-95 transition-transform duration-300 z-10 max-h-[95vh] flex flex-col items-center overflow-y-auto">
+            <button id="btn-pamphlet-close" onclick="closePamphletModal()" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary p-2 z-20 bg-surface/80 rounded-full">
+                <span class="material-symbols-outlined text-xl">close</span>
+            </button>
+            <div class="text-center mb-4 pt-2">
+                <span class="font-label-caps text-[10px] text-primary tracking-[0.25em] uppercase block">Official Boutique Invitation</span>
+                <h3 class="font-headline-md text-xl text-on-surface">VIP Store Appointment Pamphlet</h3>
+            </div>
+            <div class="relative overflow-hidden rounded-lg border border-primary/30 shadow-2xl max-w-md w-full mb-6">
+                <img src="assets/appointment_pamphlet.jpg" alt="Vaishnavi Alankar VIP Store Invitation Pamphlet" class="w-full h-auto object-contain">
+            </div>
+            <div class="flex flex-wrap justify-center gap-3 w-full">
+                <a href="tel:+918956419960" class="px-5 py-2.5 bg-primary text-on-primary font-label-caps text-xs uppercase tracking-widest font-bold hover:bg-primary-fixed transition-colors inline-flex items-center gap-1.5 rounded shadow">
+                    <span class="material-symbols-outlined text-sm">call</span> Call Pradeep Pandit (8956419960)
+                </a>
+                <a href="tel:+919021715564" class="px-5 py-2.5 bg-surface-container border border-primary text-primary font-label-caps text-xs uppercase tracking-widest font-bold hover:bg-primary hover:text-on-primary transition-colors inline-flex items-center gap-1.5 rounded shadow">
+                    <span class="material-symbols-outlined text-sm">call</span> Call Harshvardhan Pandit (9021715564)
+                </a>
+                <button onclick="closePamphletModal(); openAppointmentModal();" class="px-5 py-2.5 bg-transparent border border-primary text-primary font-label-caps text-xs uppercase tracking-widest font-bold hover:bg-primary hover:text-on-primary transition-colors inline-flex items-center gap-1.5 rounded">
+                    <span class="material-symbols-outlined text-sm">event</span> Book Slot Now
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-8 right-8 z-50 bg-surface-container-highest border border-primary text-primary px-6 py-3 rounded shadow-2xl text-xs uppercase tracking-widest opacity-0 pointer-events-none transition-all duration-300 transform translate-y-4 flex items-center gap-2">
+        <span class="material-symbols-outlined text-base">check_circle</span>
+        <span id="toast-message">Notification</span>
+    </div>
+
+    <!-- External Script -->
+    <script src="main.js"></script>
+</body>
+</html>

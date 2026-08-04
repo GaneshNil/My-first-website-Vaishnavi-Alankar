@@ -1,0 +1,210 @@
+/* Custom Styles for VAISHNAVI ALANKAR - Luxury Theme */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: transparent;
+    color: #e5e2e1;
+    overflow-x: hidden;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Scroll-Driven Background Animation Canvas */
+#bg-scroll-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: -1;
+    object-fit: cover;
+}
+
+/* Make solid section backgrounds semi-transparent so animated sequence is visible */
+.bg-background, 
+section.bg-background {
+    background-color: rgba(19, 19, 19, 0.65) !important;
+}
+
+.bg-surface-container-low {
+    background-color: rgba(28, 27, 27, 0.75) !important;
+}
+
+.bg-surface-container\/60 {
+    background-color: rgba(32, 31, 31, 0.75) !important;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #131313;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4d4635;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #f2ca50;
+}
+
+/* Glassmorphism Panels */
+.glass-panel {
+    background: rgba(26, 26, 26, 0.75);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.nav-glass {
+    background: rgba(19, 19, 19, 0.85);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+/* Inner Glow Effects */
+.inner-glow {
+    box-shadow: inset 0 0 0 1px rgba(212, 175, 55, 0.2);
+    transition: box-shadow 0.4s ease;
+}
+
+.inner-glow:hover {
+    box-shadow: inset 0 0 0 1px rgba(212, 175, 55, 0.6), 0 12px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Ambient Shadows */
+.ambient-shadow {
+    box-shadow: 0 20px 40px rgba(212, 175, 55, 0.05);
+}
+
+/* Navigation Links */
+.nav-link {
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    width: 0;
+    height: 1px;
+    background-color: #f2ca50;
+    transition: width 0.3s ease, left 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+    left: 0;
+}
+
+/* Fade Slide Up Scroll Reveal */
+.fade-slide-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fade-slide-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Product Item Transition */
+.product-item {
+    transition: opacity 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Image Hover Zoom */
+.img-hover-container {
+    overflow: hidden;
+}
+
+.img-hover-scale {
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.img-hover-container:hover .img-hover-scale {
+    transform: scale(1.06);
+}
+
+/* Particle Effect Canvas */
+#particles-js, #particles-canvas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 15;
+    pointer-events: none;
+}
+
+/* 3D Inspector Canvas */
+#jhumka-canvas {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    margin: auto;
+}
+
+/* Overlays */
+.cinematic-overlay {
+    background-color: rgba(0, 0, 0, 0.45);
+}
+
+.gradient-overlay {
+    background: linear-gradient(to top, rgba(19, 19, 19, 1) 0%, rgba(19, 19, 19, 0.3) 50%, rgba(19, 19, 19, 0.8) 100%);
+}
+
+/* Floating Input Styling */
+.input-glass {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #e5e2e1;
+    color: #e5e2e1;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-glass:focus {
+    outline: none;
+    border-bottom: 1px solid #d4af37;
+    box-shadow: 0 10px 20px -10px rgba(212, 175, 55, 0.2);
+}
+
+/* Active Drawer States */
+.drawer-open {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+.drawer-open > div:last-child {
+    transform: translateX(0) !important;
+}
+
+/* Active Modal States */
+.modal-open {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+.modal-open > div:last-child {
+    transform: scale(1) !important;
+}
+
+/* Accessibility Focus States */
+:focus-visible {
+    outline: 2px solid #f2ca50 !important;
+    outline-offset: 3px !important;
+}
+

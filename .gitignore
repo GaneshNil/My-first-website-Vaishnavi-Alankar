@@ -1,0 +1,10 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Redundant archive files
+*.zip
+
+# Node modules / dependencies
+node_modules/
+.env
