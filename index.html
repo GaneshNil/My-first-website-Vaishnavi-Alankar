@@ -115,6 +115,10 @@
             <a class="nav-link font-body-md text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300 uppercase tracking-widest text-xs" href="#contact">Contact</a>
         </div>
         <div class="flex items-center space-x-6 text-primary">
+            <button id="btn-auth-open" onclick="openAuthModal()" aria-label="Account Access" class="flex items-center gap-1.5 hover:text-primary-fixed transition-colors">
+                <span class="material-symbols-outlined text-2xl">account_circle</span>
+                <span id="auth-nav-text" class="hidden lg:inline font-label-caps text-[11px] uppercase tracking-wider font-semibold">Sign In</span>
+            </button>
             <button id="btn-wishlist-toggle" aria-label="Wishlist" class="relative hover:text-primary-fixed transition-colors">
                 <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 0;">favorite</span>
                 <span id="wishlist-badge" class="absolute -top-2 -right-2 bg-primary text-on-primary text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center opacity-0 transition-opacity">0</span>
@@ -131,6 +135,10 @@
         <a class="flex flex-col items-center text-primary" href="#hero"><span class="material-symbols-outlined mb-1">home</span><span class="text-[10px] uppercase tracking-widest">Home</span></a>
         <a class="flex flex-col items-center text-on-surface-variant hover:text-primary" href="#collections"><span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">diamond</span><span class="text-[10px] uppercase tracking-widest font-bold">Collections</span></a>
         <a class="flex flex-col items-center text-on-surface-variant hover:text-primary" href="#bridal"><span class="material-symbols-outlined mb-1">favorite</span><span class="text-[10px] uppercase tracking-widest">Bridal</span></a>
+        <button onclick="openAuthModal()" class="flex flex-col items-center text-on-surface-variant hover:text-primary">
+            <span class="material-symbols-outlined mb-1">person</span>
+            <span id="auth-mobile-text" class="text-[10px] uppercase tracking-widest">Account</span>
+        </button>
     </div>
 
     <!-- Main Content -->
@@ -652,7 +660,7 @@
                 <p class="text-xs text-on-surface-variant mb-8">Subscribe to receive private invitations to new collection unveilings and VIP private viewings.</p>
                 
                 <form id="newsletter-form" class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                    <input type="email" required placeholder="Enter your email address" class="input-glass flex-grow py-3 px-4 text-xs text-on-surface placeholder:text-outline border-b border-outline focus:border-primary">
+                    <input type="email" id="newsletter-email" name="email" required placeholder="Enter your email address" class="input-glass flex-grow py-3 px-4 text-xs text-on-surface placeholder:text-outline border-b border-outline focus:border-primary">
                     <button type="submit" class="px-8 py-3 bg-primary text-on-primary font-label-caps text-xs uppercase tracking-widest font-semibold hover:bg-primary-fixed transition-colors">
                         Subscribe
                     </button>
@@ -724,8 +732,8 @@
                     <span class="text-on-surface-variant">Subtotal:</span>
                     <span id="cart-subtotal" class="text-primary font-headline-md text-lg">₹0</span>
                 </div>
-                <button onclick="alert('Proceeding to Secure Royal Checkout...')" class="w-full py-3 bg-primary text-on-primary font-label-caps text-xs uppercase tracking-widest font-semibold hover:bg-primary-fixed transition-colors">
-                    Proceed to Checkout
+                <button onclick="openCheckoutModal()" class="w-full py-3 bg-primary text-on-primary font-label-caps text-xs uppercase tracking-widest font-semibold hover:bg-primary-fixed transition-colors flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-base">lock</span> Proceed to Royal Checkout
                 </button>
             </div>
         </div>
@@ -824,16 +832,16 @@
             <form id="appointment-form" class="space-y-4">
                 <div>
                     <label class="block text-xs uppercase tracking-widest text-on-surface-variant mb-1">Full Name</label>
-                    <input type="text" required placeholder="Enter your name" class="w-full bg-surface-container border border-outline-variant p-3 text-xs text-on-surface focus:border-primary outline-none rounded">
+                    <input type="text" id="apt-name" name="full_name" required placeholder="Enter your name" class="w-full bg-surface-container border border-outline-variant p-3 text-xs text-on-surface focus:border-primary outline-none rounded">
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs uppercase tracking-widest text-on-surface-variant mb-1">Phone Number</label>
-                        <input type="tel" required placeholder="8956419960" class="w-full bg-surface-container border border-outline-variant p-3 text-xs text-on-surface focus:border-primary outline-none rounded">
+                        <input type="tel" id="apt-phone" name="phone" required placeholder="8956419960" class="w-full bg-surface-container border border-outline-variant p-3 text-xs text-on-surface focus:border-primary outline-none rounded">
                     </div>
                     <div>
                         <label class="block text-xs uppercase tracking-widest text-on-surface-variant mb-1">Select Contact Person</label>
-                        <select class="w-full bg-surface-container border border-outline-variant p-3 text-xs text-on-surface focus:border-primary outline-none rounded">
+                        <select id="apt-contact-person" name="contact_person" class="w-full bg-surface-container border border-outline-variant p-3 text-xs text-on-surface focus:border-primary outline-none rounded">
                             <option>Pradeep Pandit (Senior Master Goldsmith)</option>
                             <option>Harshvardhan Pandit (Bridal & Solitaire Specialist)</option>
                             <option>General Concierge Team</option>
@@ -843,11 +851,11 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs uppercase tracking-widest text-on-surface-variant mb-1">Preferred Date</label>
-                        <input type="date" required class="w-full bg-surface-container border border-outline-variant p-3 text-xs text-on-surface focus:border-primary outline-none rounded">
+                        <input type="date" id="apt-date" name="preferred_date" required class="w-full bg-surface-container border border-outline-variant p-3 text-xs text-on-surface focus:border-primary outline-none rounded">
                     </div>
                     <div>
                         <label class="block text-xs uppercase tracking-widest text-on-surface-variant mb-1">Interest</label>
-                        <select class="w-full bg-surface-container border border-outline-variant p-3 text-xs text-on-surface focus:border-primary outline-none rounded">
+                        <select id="apt-interest" name="interest" class="w-full bg-surface-container border border-outline-variant p-3 text-xs text-on-surface focus:border-primary outline-none rounded">
                             <option>Bridal Collection</option>
                             <option>Antique Gold</option>
                             <option>Men's Royal Collection</option>
@@ -891,12 +899,349 @@
         </div>
     </div>
 
+    <!-- Auth Modal -->
+    <div id="auth-modal" role="dialog" aria-modal="true" aria-label="Royal Client Portal" class="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none opacity-0 transition-opacity duration-300">
+        <div id="auth-backdrop" onclick="closeAuthModal()" class="absolute inset-0 bg-black/80 backdrop-blur-md cursor-pointer"></div>
+        <div class="relative bg-surface-container-high border border-primary/40 p-6 md:p-8 rounded-lg max-w-md w-full shadow-2xl z-10 transform scale-95 transition-transform duration-300">
+            <button id="btn-auth-close" onclick="closeAuthModal()" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary p-2">
+                <span class="material-symbols-outlined text-xl">close</span>
+            </button>
+
+            <!-- Unauthenticated State (Sign In / Register Forms) -->
+            <div id="auth-unauth-container">
+                <div class="text-center mb-6">
+                    <span class="font-label-caps text-[10px] text-primary tracking-[0.25em] uppercase block">Royal Privilege Access</span>
+                    <h3 id="auth-modal-title" class="font-headline-md text-2xl text-on-surface">Client Portal Login</h3>
+                </div>
+
+                <!-- Tab Buttons -->
+                <div class="flex border-b border-outline-variant/40 mb-6 text-xs uppercase tracking-widest font-semibold">
+                    <button id="tab-login" onclick="switchAuthTab('login')" class="flex-1 py-2 text-center text-primary border-b-2 border-primary">Sign In</button>
+                    <button id="tab-register" onclick="switchAuthTab('register')" class="flex-1 py-2 text-center text-on-surface-variant hover:text-on-surface">Register</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="auth-login-form" class="space-y-4">
+                    <div>
+                        <label class="block text-[11px] uppercase tracking-widest text-on-surface-variant mb-1">Email Address</label>
+                        <input type="email" id="login-email" required placeholder="your.email@example.com" class="w-full bg-surface-container border border-outline-variant p-3 text-xs text-on-surface focus:border-primary outline-none rounded">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] uppercase tracking-widest text-on-surface-variant mb-1">Password</label>
+                        <input type="password" id="login-password" required placeholder="••••••••" class="w-full bg-surface-container border border-outline-variant p-3 text-xs text-on-surface focus:border-primary outline-none rounded">
+                    </div>
+                    <button type="submit" id="btn-login-submit" class="w-full py-3.5 bg-primary text-on-primary font-label-caps text-xs uppercase tracking-widest font-bold hover:bg-primary-fixed transition-colors rounded shadow-lg flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-sm">login</span> Sign In
+                    </button>
+                </form>
+
+                <!-- Register Form -->
+                <form id="auth-register-form" class="space-y-3.5 hidden text-left">
+                    <div>
+                        <label class="block text-[11px] uppercase tracking-widest text-on-surface-variant mb-1">Full Name *</label>
+                        <input type="text" id="register-name" required placeholder="Enter full name" class="w-full bg-surface-container border border-outline-variant p-2.5 text-xs text-on-surface focus:border-primary outline-none rounded">
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] uppercase tracking-widest text-on-surface-variant mb-1">Email Address *</label>
+                            <input type="email" id="register-email" required placeholder="your.email@example.com" class="w-full bg-surface-container border border-outline-variant p-2.5 text-xs text-on-surface focus:border-primary outline-none rounded">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] uppercase tracking-widest text-on-surface-variant mb-1">Phone Number *</label>
+                            <input type="tel" id="register-phone" required placeholder="10-digit phone number" class="w-full bg-surface-container border border-outline-variant p-2.5 text-xs text-on-surface focus:border-primary outline-none rounded">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] uppercase tracking-widest text-on-surface-variant mb-1">State / UT *</label>
+                            <select id="register-state" required onchange="handleStateChange(this.value)" class="w-full bg-surface-container border border-outline-variant p-2.5 text-xs text-on-surface focus:border-primary outline-none rounded cursor-pointer">
+                                <option value="">Select State / UT</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] uppercase tracking-widest text-on-surface-variant mb-1">City *</label>
+                            <select id="register-city" required class="w-full bg-surface-container border border-outline-variant p-2.5 text-xs text-on-surface focus:border-primary outline-none rounded cursor-pointer" disabled>
+                                <option value="">Select City (Select State First)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] uppercase tracking-widest text-on-surface-variant mb-1">Password *</label>
+                        <input type="password" id="register-password" required minlength="6" placeholder="At least 6 characters" class="w-full bg-surface-container border border-outline-variant p-2.5 text-xs text-on-surface focus:border-primary outline-none rounded">
+                    </div>
+                    <button type="submit" id="btn-register-submit" class="w-full py-3 bg-primary text-on-primary font-label-caps text-xs uppercase tracking-widest font-bold hover:bg-primary-fixed transition-colors rounded shadow-lg flex items-center justify-center gap-2 mt-1">
+                        <span class="material-symbols-outlined text-sm">person_add</span> Register & Proceed to Payment
+                    </button>
+                </form>
+            </div>
+
+            <!-- Authenticated State (User Profile, Orders & Delivery Tracker) -->
+            <div id="auth-user-container" class="hidden space-y-4">
+                <div class="flex items-center gap-4 pb-4 border-b border-outline-variant/30">
+                    <div class="w-12 h-12 bg-primary/10 border border-primary rounded-full flex items-center justify-center text-primary shrink-0">
+                        <span class="material-symbols-outlined text-2xl">verified_user</span>
+                    </div>
+                    <div class="text-left overflow-hidden">
+                        <span class="font-label-caps text-[9px] text-primary tracking-[0.2em] uppercase block">Royal VIP Member</span>
+                        <h4 id="auth-user-name" class="font-headline-md text-base text-on-surface font-semibold truncate">User Name</h4>
+                        <p id="auth-user-email" class="text-xs text-on-surface-variant truncate">user@example.com</p>
+                    </div>
+                </div>
+
+                <!-- User Profile Tabs -->
+                <div class="flex border-b border-outline-variant/40 text-xs uppercase tracking-widest font-semibold">
+                    <button id="profile-tab-orders" onclick="switchProfileTab('orders')" class="flex-1 py-2 text-center text-primary border-b-2 border-primary">My Orders</button>
+                    <button id="profile-tab-saved" onclick="switchProfileTab('saved')" class="flex-1 py-2 text-center text-on-surface-variant hover:text-on-surface">Saved Cart/Wishlist</button>
+                    <button id="profile-tab-address" onclick="switchProfileTab('address')" class="flex-1 py-2 text-center text-on-surface-variant hover:text-on-surface">Delivery Info</button>
+                </div>
+
+                <!-- Tab 1: Orders & Delivery Tracking -->
+                <div id="profile-view-orders" class="space-y-3 max-h-[50vh] overflow-y-auto pr-1">
+                    <p id="profile-orders-empty" class="text-xs text-on-surface-variant text-center py-6">No previous orders found. Explore our collection and place your first order!</p>
+                    <div id="profile-orders-list" class="space-y-3">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+
+                <!-- Tab 2: Saved Items in Profile -->
+                <div id="profile-view-saved" class="hidden space-y-3 max-h-[50vh] overflow-y-auto pr-1 text-left text-xs">
+                    <div class="p-3 bg-surface-container border border-outline-variant/30 rounded flex justify-between items-center">
+                        <div>
+                            <span class="text-on-surface font-bold block">🛒 Shopping Bag Items</span>
+                            <span id="profile-saved-cart-count" class="text-on-surface-variant text-[11px]">0 items saved</span>
+                        </div>
+                        <button onclick="closeAuthModal(); openCartDrawer();" class="text-primary hover:underline font-semibold">View Bag</button>
+                    </div>
+                    <div class="p-3 bg-surface-container border border-outline-variant/30 rounded flex justify-between items-center">
+                        <div>
+                            <span class="text-on-surface font-bold block">❤️ Saved Wishlist</span>
+                            <span id="profile-saved-wishlist-count" class="text-on-surface-variant text-[11px]">0 items saved</span>
+                        </div>
+                        <button onclick="closeAuthModal(); openWishlistDrawer();" class="text-primary hover:underline font-semibold">View Wishlist</button>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Saved Delivery Address -->
+                <div id="profile-view-address" class="hidden space-y-3 text-left">
+                    <form id="profile-address-form" onsubmit="handleSaveAddress(event)" class="space-y-3">
+                        <div>
+                            <label class="block text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">Phone Number</label>
+                            <input type="tel" id="prof-phone" placeholder="Enter contact phone number" class="w-full bg-surface-container border border-outline-variant p-2.5 text-xs text-on-surface focus:border-primary outline-none rounded">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">Default Delivery Address</label>
+                            <textarea id="prof-address" rows="2" placeholder="House/Flat No., Street, City, State, Pincode" class="w-full bg-surface-container border border-outline-variant p-2.5 text-xs text-on-surface focus:border-primary outline-none rounded"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-2.5 bg-primary/20 border border-primary text-primary font-label-caps text-xs uppercase tracking-widest font-semibold hover:bg-primary hover:text-on-primary transition-colors rounded">
+                            Save Delivery Address
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="pt-3 border-t border-outline-variant/30 flex gap-2">
+                    <button onclick="closeAuthModal(); openAppointmentModal();" class="flex-1 py-2.5 bg-surface-container border border-primary/40 text-primary font-label-caps text-[11px] uppercase tracking-widest font-semibold hover:bg-primary hover:text-on-primary transition-colors rounded flex items-center justify-center gap-1">
+                        <span class="material-symbols-outlined text-sm">event</span> Consultation
+                    </button>
+                    <button id="btn-auth-logout" onclick="handleAuthLogout()" class="px-4 py-2.5 bg-error-container/20 border border-error/40 text-error font-label-caps text-[11px] uppercase tracking-widest font-semibold hover:bg-error/20 transition-colors rounded flex items-center justify-center gap-1">
+                        <span class="material-symbols-outlined text-sm">logout</span> Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Royal Checkout Modal -->
+    <div id="checkout-modal" role="dialog" aria-modal="true" aria-label="Royal Checkout" class="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none opacity-0 transition-opacity duration-300">
+        <div id="checkout-backdrop" onclick="closeCheckoutModal()" class="absolute inset-0 bg-black/85 backdrop-blur-md cursor-pointer"></div>
+        <div class="relative bg-surface-container-high border border-primary/40 p-6 md:p-8 rounded-lg max-w-2xl w-full shadow-2xl z-10 transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto">
+            <button id="btn-checkout-close" onclick="closeCheckoutModal()" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary p-2">
+                <span class="material-symbols-outlined text-xl">close</span>
+            </button>
+
+            <div id="checkout-form-container">
+                <div class="text-center mb-6">
+                    <span class="font-label-caps text-[10px] text-primary tracking-[0.25em] uppercase block">Insured Luxury Shipping</span>
+                    <h3 class="font-headline-md text-2xl text-on-surface">Royal Order Checkout</h3>
+                </div>
+
+                <form id="checkout-form" onsubmit="handleCheckoutSubmit(event)" class="space-y-6">
+                    <!-- Delivery Location & Address Selection -->
+                    <div class="bg-surface-container/60 p-4 rounded border border-outline-variant/30 space-y-4 text-left">
+                        <h4 class="font-label-caps text-xs uppercase tracking-widest text-primary font-bold flex items-center gap-2">
+                            <span class="material-symbols-outlined text-base">local_shipping</span> 1. Select Delivery Location & Recipient
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[11px] uppercase tracking-widest text-on-surface-variant mb-1">Recipient Full Name</label>
+                                <input type="text" id="chk-name" required placeholder="Enter full name" class="w-full bg-surface-container border border-outline-variant p-2.5 text-xs text-on-surface focus:border-primary outline-none rounded">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] uppercase tracking-widest text-on-surface-variant mb-1">Mobile Phone Number</label>
+                                <input type="tel" id="chk-phone" required placeholder="10-digit mobile number" class="w-full bg-surface-container border border-outline-variant p-2.5 text-xs text-on-surface focus:border-primary outline-none rounded">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] uppercase tracking-widest text-on-surface-variant mb-1">Delivery Street Address</label>
+                            <input type="text" id="chk-address" required placeholder="House/Flat No., Building, Street Name" class="w-full bg-surface-container border border-outline-variant p-2.5 text-xs text-on-surface focus:border-primary outline-none rounded">
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-[11px] uppercase tracking-widest text-on-surface-variant mb-1">City / District</label>
+                                <input type="text" id="chk-city" required placeholder="e.g. Latur / Mumbai" class="w-full bg-surface-container border border-outline-variant p-2.5 text-xs text-on-surface focus:border-primary outline-none rounded">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] uppercase tracking-widest text-on-surface-variant mb-1">State</label>
+                                <input type="text" id="chk-state" required placeholder="Maharashtra" class="w-full bg-surface-container border border-outline-variant p-2.5 text-xs text-on-surface focus:border-primary outline-none rounded">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] uppercase tracking-widest text-on-surface-variant mb-1">Pincode</label>
+                                <input type="text" id="chk-pincode" required placeholder="413512" class="w-full bg-surface-container border border-outline-variant p-2.5 text-xs text-on-surface focus:border-primary outline-none rounded">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method Selection -->
+                    <div class="bg-surface-container/60 p-4 rounded border border-outline-variant/30 space-y-4 text-left">
+                        <h4 class="font-label-caps text-xs uppercase tracking-widest text-primary font-bold flex items-center gap-2">
+                            <span class="material-symbols-outlined text-base">payments</span> 2. Select Payment Method
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <label class="p-3 bg-surface-container border border-outline-variant rounded flex items-center gap-3 cursor-pointer hover:border-primary">
+                                <input type="radio" name="payment_method" value="UPI Instant Pay" checked class="accent-primary">
+                                <div>
+                                    <span class="font-bold text-on-surface block">📱 UPI / QR Code</span>
+                                    <span class="text-[10px] text-on-surface-variant">Google Pay, PhonePe, Paytm, BHIM</span>
+                                </div>
+                            </label>
+                            <label class="p-3 bg-surface-container border border-outline-variant rounded flex items-center gap-3 cursor-pointer hover:border-primary">
+                                <input type="radio" name="payment_method" value="Credit/Debit Card" class="accent-primary">
+                                <div>
+                                    <span class="font-bold text-on-surface block">💳 Card (Visa, MC, RuPay)</span>
+                                    <span class="text-[10px] text-on-surface-variant">Credit & Debit Cards</span>
+                                </div>
+                            </label>
+                            <label class="p-3 bg-surface-container border border-outline-variant rounded flex items-center gap-3 cursor-pointer hover:border-primary">
+                                <input type="radio" name="payment_method" value="Insured Cash on Delivery" class="accent-primary">
+                                <div>
+                                    <span class="font-bold text-on-surface block">🚚 Pay on Delivery (COD)</span>
+                                    <span class="text-[10px] text-on-surface-variant">Insured Courier Verification</span>
+                                </div>
+                            </label>
+                            <label class="p-3 bg-surface-container border border-outline-variant rounded flex items-center gap-3 cursor-pointer hover:border-primary">
+                                <input type="radio" name="payment_method" value="Boutique Vault Pickup" class="accent-primary">
+                                <div>
+                                    <span class="font-bold text-on-surface block">🏛️ Store Vault Pickup</span>
+                                    <span class="text-[10px] text-on-surface-variant">Vaishnavi Alankar Latur Boutique</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary & Complete Button -->
+                    <div class="pt-2 border-t border-outline-variant/30 flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <div class="text-left">
+                            <span class="text-xs text-on-surface-variant block">Total Payable (Free Insured Transit):</span>
+                            <span id="chk-total-price" class="text-2xl font-headline-md text-primary font-bold">₹0</span>
+                        </div>
+                        <button type="submit" id="btn-place-order" class="w-full sm:w-auto px-8 py-3.5 bg-primary text-on-primary font-label-caps text-xs uppercase tracking-widest font-bold hover:bg-primary-fixed transition-colors rounded shadow-lg flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-base">verified</span> Complete & Pay Order
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Order Success View -->
+            <div id="checkout-success-container" class="hidden text-center space-y-6 py-4">
+                <div class="w-20 h-20 bg-primary/10 border-2 border-primary rounded-full flex items-center justify-center mx-auto text-primary">
+                    <span class="material-symbols-outlined text-4xl">check_circle</span>
+                </div>
+                <div>
+                    <span class="font-label-caps text-xs text-primary tracking-[0.2em] uppercase block font-bold">Order Confirmed</span>
+                    <h3 class="font-headline-md text-2xl text-on-surface mt-1">Thank You for Your Order!</h3>
+                    <p class="text-xs text-on-surface-variant mt-2 max-w-md mx-auto">Your order has been placed successfully and dispatched for high-security insured delivery.</p>
+                </div>
+
+                <!-- Delivery ID Display Box -->
+                <div class="bg-surface-container border border-primary/40 p-4 rounded-lg max-w-md mx-auto text-left space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="text-[11px] uppercase tracking-widest text-on-surface-variant font-bold">Delivery Tracking ID:</span>
+                        <span id="success-delivery-id" class="font-mono text-sm font-bold text-primary bg-primary/10 px-2.5 py-1 rounded border border-primary/30">VA-DEL-000000</span>
+                    </div>
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-on-surface-variant">Estimated Delivery:</span>
+                        <span class="text-on-surface font-semibold">3-4 Business Days (Insured Express)</span>
+                    </div>
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-on-surface-variant">Payment Status:</span>
+                        <span id="success-payment-status" class="text-emerald-400 font-semibold">Confirmed</span>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-center gap-3 pt-2">
+                    <button onclick="closeCheckoutModal(); openAuthModal('orders');" class="px-6 py-3 bg-surface-container border border-primary text-primary font-label-caps text-xs uppercase tracking-widest font-bold hover:bg-primary hover:text-on-primary transition-colors rounded">
+                        View Order in Profile
+                    </button>
+                    <button onclick="closeCheckoutModal()" class="px-6 py-3 bg-primary text-on-primary font-label-caps text-xs uppercase tracking-widest font-bold hover:bg-primary-fixed transition-colors rounded">
+                        Continue Shopping
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- UPI Payment Modal -->
+    <div id="upi-modal" role="dialog" aria-modal="true" aria-label="UPI Payment Verification" class="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none opacity-0 transition-opacity duration-300">
+        <div id="upi-backdrop" onclick="closeUpiModal()" class="absolute inset-0 bg-black/85 backdrop-blur-md cursor-pointer"></div>
+        <div class="relative bg-surface-container-high border border-primary/40 p-6 md:p-8 rounded-lg max-w-md w-full shadow-2xl z-10 transform scale-95 transition-transform duration-300 text-center max-h-[90vh] overflow-y-auto">
+            <button id="btn-upi-close" onclick="closeUpiModal()" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary p-2">
+                <span class="material-symbols-outlined text-xl">close</span>
+            </button>
+
+            <div class="mb-4">
+                <span class="font-label-caps text-[10px] text-primary tracking-[0.25em] uppercase block font-semibold">Step 2: Registration Payment</span>
+                <h3 class="font-headline-md text-2xl text-on-surface">Pay via UPI</h3>
+                <p class="text-xs text-on-surface-variant mt-1">Scan QR code or use your favorite UPI App to complete payment.</p>
+            </div>
+
+            <!-- UPI QR Code Box -->
+            <div class="bg-surface-container p-4 rounded-lg border border-primary/30 max-w-[240px] mx-auto mb-4 text-center">
+                <img id="upi-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=upi%3A%2F%2Fpay%3Fpa%3D8956419960%40ibl%26pn%3DVaishnavi%2520Alankar%26tn%3DVIP%2520Royal%2520Registration%26cu%3DINR" alt="UPI Payment QR Code" class="w-44 h-44 mx-auto rounded border border-primary/20 bg-white p-1">
+                <span class="text-[10px] text-on-surface-variant block mt-2 font-mono font-bold">UPI ID: <span class="text-primary font-bold">8956419960@ibl</span></span>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="space-y-2.5 mb-5">
+                <button onclick="copyUpiId()" class="w-full py-2.5 bg-surface-container border border-primary/40 text-primary font-label-caps text-xs uppercase tracking-widest font-semibold hover:bg-primary/10 transition-colors rounded flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-sm">content_copy</span> Copy UPI ID (8956419960@ibl)
+                </button>
+                <a id="btn-open-upi-app" href="upi://pay?pa=8956419960@ibl&pn=Vaishnavi%20Alankar&tn=VIP%20Registration&cu=INR" class="w-full py-3 bg-primary text-on-primary font-label-caps text-xs uppercase tracking-widest font-bold hover:bg-primary-fixed transition-colors rounded shadow flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-sm">smartphone</span> Open UPI App (GPay / PhonePe / Paytm)
+                </a>
+            </div>
+
+            <!-- Payment UTR / Ref No. Submission Form -->
+            <form id="upi-confirm-form" onsubmit="handleUpiConfirmSubmit(event)" class="space-y-3 pt-4 border-t border-outline-variant/30 text-left">
+                <div>
+                    <label class="block text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">Enter 12-Digit UPI Ref No. / UTR *</label>
+                    <input type="text" id="upi-utr-input" required minlength="6" placeholder="e.g. 329182910482" class="w-full bg-surface-container border border-outline-variant p-2.5 text-xs text-on-surface focus:border-primary outline-none rounded font-mono">
+                </div>
+                <button type="submit" id="btn-upi-confirm" class="w-full py-3 bg-surface-container border border-primary text-primary font-label-caps text-xs uppercase tracking-widest font-bold hover:bg-primary hover:text-on-primary transition-colors rounded flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-sm">verified</span> Confirm Payment & Activate Registration
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-8 right-8 z-50 bg-surface-container-highest border border-primary text-primary px-6 py-3 rounded shadow-2xl text-xs uppercase tracking-widest opacity-0 pointer-events-none transition-all duration-300 transform translate-y-4 flex items-center gap-2">
         <span class="material-symbols-outlined text-base">check_circle</span>
         <span id="toast-message">Notification</span>
     </div>
 
+    <!-- Indian States and Cities Data -->
+    <script src="indian-data.js"></script>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- External Script -->
     <script src="main.js"></script>
 </body>

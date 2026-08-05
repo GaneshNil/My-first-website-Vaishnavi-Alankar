@@ -24,6 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initMobileNavScroll();
     updateCartUI();
     updateWishlistUI();
+    initSupabase();
+    initStatesDropdown();
 });
 
 /* --- 1. Scroll Reveal Animation --- */
@@ -545,19 +547,14 @@ function initDrawersAndModals() {
     });
 
     // Appointment Form Submit
-    document.getElementById('appointment-form')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        aptModal.classList.remove('modal-open');
-        showToast('Appointment request received! Our concierge will contact you shortly.');
-        e.target.reset();
-    });
+    document.getElementById('appointment-form')?.addEventListener('submit', handleAppointmentSubmit);
 
     // Newsletter Form Submit
-    document.getElementById('newsletter-form')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        showToast('Welcome to the Royal Privilege Club!');
-        e.target.reset();
-    });
+    document.getElementById('newsletter-form')?.addEventListener('submit', handleNewsletterSubmit);
+
+    // Auth Forms Submit
+    document.getElementById('auth-login-form')?.addEventListener('submit', handleAuthLogin);
+    document.getElementById('auth-register-form')?.addEventListener('submit', handleAuthRegister);
 }
 
 function scrollToSection(id) {
@@ -615,6 +612,7 @@ function updateCartUI() {
     } catch (e) {
         console.warn('LocalStorage save error:', e);
     }
+    syncUserDataWithSupabase();
 
     const totalCount = cart.reduce((sum, item) => sum + item.qty, 0);
     if (totalCount > 0) {
@@ -677,6 +675,7 @@ function updateWishlistUI() {
     } catch (e) {
         console.warn('LocalStorage save error:', e);
     }
+    syncUserDataWithSupabase();
 
     if (wishlist.length > 0) {
         if (badge) {
@@ -955,5 +954,696 @@ function initScrollBackgroundAnimation() {
 
     preloadFrames();
     resizeCanvas();
+}
+
+/* --- Supabase Integration & Authentication --- */
+const SUPABASE_URL = 'https://xqbkaqxnbyquuyggmvha.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_OLWCrNM89g_RYYAoiBAqjA_Md6mKka4';
+
+let supabaseClient = null;
+let currentUser = null;
+
+function initSupabase() {
+    if (window.supabase && window.supabase.createClient) {
+        try {
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('Supabase initialized with URL:', SUPABASE_URL);
+
+            supabaseClient.auth.getSession().then(({ data: { session } }) => {
+                handleAuthState(session ? session.user : null);
+            }).catch(err => console.warn('Supabase getSession error:', err));
+
+            supabaseClient.auth.onAuthStateChange((event, session) => {
+                handleAuthState(session ? session.user : null);
+            });
+        } catch (err) {
+            console.error('Supabase initialization error:', err);
+        }
+    } else {
+        console.warn('Supabase SDK not loaded.');
+    }
+}
+
+async function handleAuthState(user) {
+    currentUser = user;
+    const navText = document.getElementById('auth-nav-text');
+    const mobileText = document.getElementById('auth-mobile-text');
+    const unauthContainer = document.getElementById('auth-unauth-container');
+    const userContainer = document.getElementById('auth-user-container');
+    const userEmailEl = document.getElementById('auth-user-email');
+    const userNameEl = document.getElementById('auth-user-name');
+
+    if (user) {
+        const displayName = user.user_metadata?.full_name || user.email.split('@')[0];
+        if (navText) navText.textContent = displayName;
+        if (mobileText) mobileText.textContent = displayName;
+
+        if (unauthContainer) unauthContainer.classList.add('hidden');
+        if (userContainer) userContainer.classList.remove('hidden');
+        if (userEmailEl) userEmailEl.textContent = user.email;
+        if (userNameEl) userNameEl.textContent = displayName ? `Welcome, ${displayName}` : '';
+
+        // Pre-fill consultation fields
+        const aptName = document.getElementById('apt-name');
+        if (aptName && !aptName.value && user.user_metadata?.full_name) {
+            aptName.value = user.user_metadata.full_name;
+        }
+
+        const profPhone = document.getElementById('prof-phone');
+        if (profPhone && user.user_metadata?.phone) {
+            profPhone.value = user.user_metadata.phone;
+        }
+
+        const profAddress = document.getElementById('prof-address');
+        if (profAddress && user.user_metadata?.address) {
+            profAddress.value = user.user_metadata.address;
+        }
+
+        // Restore saved cart and wishlist from user metadata if local is empty
+        if (user.user_metadata?.cart && Array.isArray(user.user_metadata.cart) && cart.length === 0) {
+            cart = user.user_metadata.cart;
+            updateCartUI();
+        }
+        if (user.user_metadata?.wishlist && Array.isArray(user.user_metadata.wishlist) && wishlist.length === 0) {
+            wishlist = user.user_metadata.wishlist;
+            updateWishlistUI();
+        }
+
+        // Load user's orders
+        loadUserOrders();
+    } else {
+        if (navText) navText.textContent = 'Sign In';
+        if (mobileText) mobileText.textContent = 'Account';
+
+        if (unauthContainer) unauthContainer.classList.remove('hidden');
+        if (userContainer) userContainer.classList.add('hidden');
+    }
+}
+
+async function syncUserDataWithSupabase() {
+    const cartCountEl = document.getElementById('profile-saved-cart-count');
+    const wishlistCountEl = document.getElementById('profile-saved-wishlist-count');
+    if (cartCountEl) cartCountEl.textContent = `${cart.length} item(s) in bag`;
+    if (wishlistCountEl) wishlistCountEl.textContent = `${wishlist.length} item(s) saved`;
+
+    if (!supabaseClient || !currentUser) return;
+    try {
+        await supabaseClient.auth.updateUser({
+            data: { cart: cart, wishlist: wishlist }
+        });
+    } catch (err) {
+        console.warn('Sync user data warning:', err);
+    }
+}
+
+function openAuthModal(defaultTab) {
+    const modal = document.getElementById('auth-modal');
+    if (modal) modal.classList.add('modal-open');
+    if (defaultTab && currentUser) {
+        switchProfileTab(defaultTab);
+    }
+}
+
+function closeAuthModal() {
+    const modal = document.getElementById('auth-modal');
+    if (modal) modal.classList.remove('modal-open');
+}
+
+function switchAuthTab(tab) {
+    const loginForm = document.getElementById('auth-login-form');
+    const registerForm = document.getElementById('auth-register-form');
+    const tabLogin = document.getElementById('tab-login');
+    const tabRegister = document.getElementById('tab-register');
+    const title = document.getElementById('auth-modal-title');
+
+    if (tab === 'login') {
+        loginForm?.classList.remove('hidden');
+        registerForm?.classList.add('hidden');
+        tabLogin?.classList.add('text-primary', 'border-b-2', 'border-primary');
+        tabLogin?.classList.remove('text-on-surface-variant');
+        tabRegister?.classList.remove('text-primary', 'border-b-2', 'border-primary');
+        tabRegister?.classList.add('text-on-surface-variant');
+        if (title) title.textContent = 'Client Portal Login';
+    } else {
+        loginForm?.classList.add('hidden');
+        registerForm?.classList.remove('hidden');
+        tabRegister?.classList.add('text-primary', 'border-b-2', 'border-primary');
+        tabRegister?.classList.remove('text-on-surface-variant');
+        tabLogin?.classList.remove('text-primary', 'border-b-2', 'border-primary');
+        tabLogin?.classList.add('text-on-surface-variant');
+        if (title) title.textContent = 'Join Royal Privilege Club';
+    }
+}
+
+function switchProfileTab(tab) {
+    const viewOrders = document.getElementById('profile-view-orders');
+    const viewSaved = document.getElementById('profile-view-saved');
+    const viewAddress = document.getElementById('profile-view-address');
+
+    const tabOrders = document.getElementById('profile-tab-orders');
+    const tabSaved = document.getElementById('profile-tab-saved');
+    const tabAddress = document.getElementById('profile-tab-address');
+
+    [viewOrders, viewSaved, viewAddress].forEach(v => v?.classList.add('hidden'));
+    [tabOrders, tabSaved, tabAddress].forEach(t => {
+        t?.classList.remove('text-primary', 'border-b-2', 'border-primary');
+        t?.classList.add('text-on-surface-variant');
+    });
+
+    if (tab === 'orders') {
+        viewOrders?.classList.remove('hidden');
+        tabOrders?.classList.add('text-primary', 'border-b-2', 'border-primary');
+        tabOrders?.classList.remove('text-on-surface-variant');
+        loadUserOrders();
+    } else if (tab === 'saved') {
+        viewSaved?.classList.remove('hidden');
+        tabSaved?.classList.add('text-primary', 'border-b-2', 'border-primary');
+        tabSaved?.classList.remove('text-on-surface-variant');
+    } else if (tab === 'address') {
+        viewAddress?.classList.remove('hidden');
+        tabAddress?.classList.add('text-primary', 'border-b-2', 'border-primary');
+        tabAddress?.classList.remove('text-on-surface-variant');
+    }
+}
+
+async function handleSaveAddress(e) {
+    e.preventDefault();
+    const phone = document.getElementById('prof-phone')?.value.trim();
+    const address = document.getElementById('prof-address')?.value.trim();
+
+    if (supabaseClient && currentUser) {
+        const { error } = await supabaseClient.auth.updateUser({
+            data: { phone, address }
+        });
+        if (error) {
+            showToast(`Address update error: ${error.message}`);
+        } else {
+            showToast('✅ Delivery address saved to your profile!');
+        }
+    } else {
+        localStorage.setItem('va_user_address', JSON.stringify({ phone, address }));
+        showToast('✅ Delivery address saved locally!');
+    }
+}
+
+async function loadUserOrders() {
+    const listEl = document.getElementById('profile-orders-list');
+    const emptyEl = document.getElementById('profile-orders-empty');
+
+    let orders = [];
+
+    if (supabaseClient && currentUser) {
+        try {
+            const { data, error } = await supabaseClient
+                .from('orders')
+                .select('*')
+                .eq('user_id', currentUser.id)
+                .order('created_at', { ascending: false });
+            
+            if (!error && data && data.length > 0) {
+                orders = data;
+            }
+        } catch (err) {
+            console.warn('Fetch Supabase orders notice:', err);
+        }
+    }
+
+    if (orders.length === 0) {
+        try {
+            const savedLocal = localStorage.getItem('va_orders');
+            if (savedLocal) orders = JSON.parse(savedLocal);
+        } catch (e) {
+            console.warn('Local orders read error:', e);
+        }
+    }
+
+    if (!listEl) return;
+
+    if (orders.length === 0) {
+        if (emptyEl) emptyEl.classList.remove('hidden');
+        listEl.innerHTML = '';
+        return;
+    }
+
+    if (emptyEl) emptyEl.classList.add('hidden');
+
+    listEl.innerHTML = orders.map(order => `
+        <div class="p-3.5 bg-surface-container border border-primary/30 rounded-lg text-left text-xs space-y-2">
+            <div class="flex justify-between items-center pb-2 border-b border-outline-variant/20">
+                <span class="font-mono text-primary font-bold bg-primary/10 px-2 py-0.5 rounded border border-primary/20">${order.delivery_id || 'VA-DEL-000000'}</span>
+                <span class="text-[10px] text-emerald-400 font-semibold uppercase tracking-wider">${order.status || 'Dispatched'}</span>
+            </div>
+            <div class="text-on-surface-variant space-y-1 text-[11px]">
+                <p><strong>Payment:</strong> ${order.payment_method || 'UPI'} • <strong>Total:</strong> ₹${(order.subtotal || 0).toLocaleString('en-IN')}</p>
+                <p class="truncate"><strong>Delivery to:</strong> ${order.delivery_address || 'Address provided'}</p>
+                <p class="text-[10px] text-outline">Date: ${new Date(order.created_at || Date.now()).toLocaleDateString()}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+async function handleAuthLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('login-email')?.value.trim();
+    const password = document.getElementById('login-password')?.value;
+
+    if (!supabaseClient) {
+        showToast('Supabase client is not ready');
+        return;
+    }
+
+    const btn = document.getElementById('btn-login-submit');
+    const originalContent = btn ? btn.innerHTML : '';
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">progress_activity</span> Signing in...';
+    }
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+    if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = originalContent;
+    }
+
+    if (error) {
+        showToast(`Login failed: ${error.message}`);
+    } else {
+        showToast(`Welcome back, ${data.user.email}!`);
+        closeAuthModal();
+    }
+}
+
+async function handleAuthRegister(e) {
+    e.preventDefault();
+    const name = document.getElementById('register-name')?.value.trim();
+    const email = document.getElementById('register-email')?.value.trim();
+    const phone = document.getElementById('register-phone')?.value.trim();
+    const state = document.getElementById('register-state')?.value;
+    const city = document.getElementById('register-city')?.value;
+    const password = document.getElementById('register-password')?.value;
+
+    if (!name || !email || !phone || !state || !city || !password) {
+        showToast('Please fill in all required registration fields.');
+        return;
+    }
+
+    if (!supabaseClient) {
+        showToast('Supabase client is not ready');
+        return;
+    }
+
+    const btn = document.getElementById('btn-register-submit');
+    const originalContent = btn ? btn.innerHTML : '';
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">progress_activity</span> Registering Account...';
+    }
+
+    const { data, error } = await supabaseClient.auth.signUp({
+        email,
+        password,
+        options: {
+            data: {
+                full_name: name,
+                phone: phone,
+                state: state,
+                city: city,
+                payment_status: 'Pending UPI Payment (8956419960@ibl)',
+                registration_date: new Date().toISOString(),
+                cart: cart,
+                wishlist: wishlist
+            }
+        }
+    });
+
+    if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = originalContent;
+    }
+
+    if (error) {
+        if (error.message.includes('already registered') || error.message.includes('unique constraint') || error.status === 422) {
+            showToast('⚠️ An account with this email already exists! Please Sign In.');
+            switchAuthTab('login');
+            const loginEmailInput = document.getElementById('login-email');
+            if (loginEmailInput) loginEmailInput.value = email;
+        } else {
+            showToast(`Registration failed: ${error.message}`);
+        }
+        return;
+    }
+
+    // Insert into Supabase registrations table
+    if (data.user) {
+        try {
+            await supabaseClient.from('registrations').insert([
+                {
+                    user_id: data.user.id,
+                    full_name: name,
+                    email: email,
+                    phone: phone,
+                    state: state,
+                    city: city,
+                    payment_status: 'Pending UPI Payment',
+                    created_at: new Date().toISOString()
+                }
+            ]);
+        } catch (err) {
+            console.warn('Registrations table insert notice:', err);
+        }
+    }
+
+    showToast('✨ Registration saved! Complete UPI payment to activate.');
+    closeAuthModal();
+    openUpiModal();
+}
+
+async function handleAuthLogout() {
+    if (supabaseClient) {
+        await supabaseClient.auth.signOut();
+        showToast('Successfully signed out.');
+        closeAuthModal();
+    }
+}
+
+async function handleAppointmentSubmit(e) {
+    e.preventDefault();
+    const name = document.getElementById('apt-name')?.value.trim();
+    const phone = document.getElementById('apt-phone')?.value.trim();
+    const contactPerson = document.getElementById('apt-contact-person')?.value;
+    const preferredDate = document.getElementById('apt-date')?.value;
+    const interest = document.getElementById('apt-interest')?.value;
+
+    const btn = e.target.querySelector('button[type="submit"]');
+    const originalContent = btn ? btn.innerHTML : '';
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">progress_activity</span> Booking Consultation...';
+    }
+
+    let saveSuccess = false;
+    let errorDetail = '';
+
+    if (supabaseClient) {
+        try {
+            const { data, error } = await supabaseClient.from('appointments').insert([
+                {
+                    full_name: name,
+                    phone: phone,
+                    contact_person: contactPerson,
+                    preferred_date: preferredDate,
+                    interest: interest,
+                    user_id: currentUser ? currentUser.id : null,
+                    created_at: new Date().toISOString()
+                }
+            ]);
+
+            if (error) {
+                console.error('Supabase Appointment Error:', error);
+                errorDetail = error.message;
+            } else {
+                saveSuccess = true;
+            }
+        } catch (err) {
+            console.error('Appointment submit exception:', err);
+            errorDetail = err.message || 'Connection error';
+        }
+    }
+
+    if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = originalContent;
+    }
+
+    const aptModal = document.getElementById('appointment-modal');
+    if (aptModal) aptModal.classList.remove('modal-open');
+
+    if (saveSuccess) {
+        showToast('✨ Appointment booked & saved in Supabase! Our concierge will contact you shortly.');
+    } else if (errorDetail) {
+        showToast(`Request sent! (Note: ${errorDetail})`);
+    } else {
+        showToast('Appointment request received! Our concierge will contact you shortly.');
+    }
+
+    e.target.reset();
+}
+
+async function handleNewsletterSubmit(e) {
+    e.preventDefault();
+    const email = document.getElementById('newsletter-email')?.value.trim();
+    if (!email) return;
+
+    let saveSuccess = false;
+    if (supabaseClient) {
+        try {
+            const { error } = await supabaseClient.from('newsletter_subscribers').insert([
+                { email: email, subscribed_at: new Date().toISOString() }
+            ]);
+            if (!error) saveSuccess = true;
+        } catch (err) {
+            console.warn('Newsletter error:', err);
+        }
+    }
+
+    showToast(saveSuccess ? '✨ Email saved! Welcome to the Royal Privilege Club.' : 'Welcome to the Royal Privilege Club!');
+    e.target.reset();
+}
+
+/* --- Checkout Modal & Order Delivery Functions --- */
+function openCheckoutModal() {
+    if (cart.length === 0) {
+        showToast('Your Shopping Bag is empty! Add items before checkout.');
+        const cartDrawer = document.getElementById('cart-drawer');
+        if (cartDrawer) cartDrawer.classList.add('modal-open');
+        return;
+    }
+
+    const cartDrawer = document.getElementById('cart-drawer');
+    if (cartDrawer) cartDrawer.classList.remove('modal-open');
+
+    if (currentUser) {
+        const nameInput = document.getElementById('chk-name');
+        if (nameInput && currentUser.user_metadata?.full_name) {
+            nameInput.value = currentUser.user_metadata.full_name;
+        }
+
+        const phoneInput = document.getElementById('chk-phone');
+        if (phoneInput && currentUser.user_metadata?.phone) {
+            phoneInput.value = currentUser.user_metadata.phone;
+        }
+
+        const addrInput = document.getElementById('chk-address');
+        if (addrInput && currentUser.user_metadata?.address) {
+            addrInput.value = currentUser.user_metadata.address;
+        }
+    }
+
+    const total = cart.reduce((sum, item) => {
+        const numPrice = parseInt(item.price.replace(/[^\d]/g, '')) || 0;
+        return sum + (numPrice * item.qty);
+    }, 0);
+
+    const priceEl = document.getElementById('chk-total-price');
+    if (priceEl) priceEl.textContent = `₹${total.toLocaleString('en-IN')}`;
+
+    const formContainer = document.getElementById('checkout-form-container');
+    const successContainer = document.getElementById('checkout-success-container');
+    if (formContainer) formContainer.classList.remove('hidden');
+    if (successContainer) successContainer.classList.add('hidden');
+
+    const modal = document.getElementById('checkout-modal');
+    if (modal) modal.classList.add('modal-open');
+}
+
+function closeCheckoutModal() {
+    const modal = document.getElementById('checkout-modal');
+    if (modal) modal.classList.remove('modal-open');
+}
+
+async function handleCheckoutSubmit(e) {
+    e.preventDefault();
+
+    const recipientName = document.getElementById('chk-name')?.value.trim();
+    const phone = document.getElementById('chk-phone')?.value.trim();
+    const address = document.getElementById('chk-address')?.value.trim();
+    const city = document.getElementById('chk-city')?.value.trim();
+    const state = document.getElementById('chk-state')?.value.trim();
+    const pincode = document.getElementById('chk-pincode')?.value.trim();
+
+    const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value || 'UPI Instant Pay';
+
+    const totalSubtotal = cart.reduce((sum, item) => {
+        const numPrice = parseInt(item.price.replace(/[^\d]/g, '')) || 0;
+        return sum + (numPrice * item.qty);
+    }, 0);
+
+    // Unique Delivery Tracking ID
+    const deliveryId = 'VA-DEL-' + Math.floor(100000 + Math.random() * 900000) + '-' + new Date().getFullYear();
+
+    const orderData = {
+        delivery_id: deliveryId,
+        user_id: currentUser ? currentUser.id : null,
+        user_email: currentUser ? currentUser.email : null,
+        recipient_name: recipientName,
+        phone: phone,
+        delivery_address: `${address}, ${city}, ${state} - ${pincode}`,
+        payment_method: paymentMethod,
+        items: cart,
+        subtotal: totalSubtotal,
+        status: 'Confirmed - Insured Express Transit',
+        created_at: new Date().toISOString()
+    };
+
+    const btn = document.getElementById('btn-place-order');
+    const originalText = btn ? btn.innerHTML : '';
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">progress_activity</span> Processing Order & Delivery ID...';
+    }
+
+    if (supabaseClient) {
+        try {
+            const { error } = await supabaseClient.from('orders').insert([orderData]);
+            if (error) console.warn('Supabase order insert notice:', error.message);
+        } catch (err) {
+            console.warn('Order submission exception:', err);
+        }
+    }
+
+    try {
+        let localOrders = [];
+        const saved = localStorage.getItem('va_orders');
+        if (saved) localOrders = JSON.parse(saved);
+        localOrders.unshift(orderData);
+        localStorage.setItem('va_orders', JSON.stringify(localOrders));
+    } catch (e) {
+        console.warn('Local order storage warning:', e);
+    }
+
+    if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    }
+
+    const delIdEl = document.getElementById('success-delivery-id');
+    const payStatusEl = document.getElementById('success-payment-status');
+    if (delIdEl) delIdEl.textContent = deliveryId;
+    if (payStatusEl) payStatusEl.textContent = `Confirmed (${paymentMethod})`;
+
+    cart = [];
+    updateCartUI();
+    syncUserDataWithSupabase();
+
+    const formContainer = document.getElementById('checkout-form-container');
+    const successContainer = document.getElementById('checkout-success-container');
+    if (formContainer) formContainer.classList.add('hidden');
+    if (successContainer) successContainer.classList.remove('hidden');
+
+    showToast(`🎉 Order Placed! Delivery Tracking ID: ${deliveryId}`);
+}
+
+/* --- State & City Selection Logic --- */
+function initStatesDropdown() {
+    const stateSelect = document.getElementById('register-state');
+    if (!stateSelect || typeof INDIAN_STATES_AND_CITIES === 'undefined') return;
+
+    stateSelect.innerHTML = '<option value="">Select State / UT</option>';
+    Object.keys(INDIAN_STATES_AND_CITIES).sort().forEach(state => {
+        const option = document.createElement('option');
+        option.value = state;
+        option.textContent = state;
+        stateSelect.appendChild(option);
+    });
+}
+
+function handleStateChange(selectedState) {
+    const citySelect = document.getElementById('register-city');
+    if (!citySelect) return;
+
+    if (!selectedState || !INDIAN_STATES_AND_CITIES[selectedState]) {
+        citySelect.innerHTML = '<option value="">Select City (Select State First)</option>';
+        citySelect.disabled = true;
+        return;
+    }
+
+    const cities = INDIAN_STATES_AND_CITIES[selectedState].sort();
+    citySelect.innerHTML = '<option value="">Select City</option>';
+    cities.forEach(city => {
+        const option = document.createElement('option');
+        option.value = city;
+        option.textContent = city;
+        citySelect.appendChild(option);
+    });
+
+    citySelect.disabled = false;
+}
+
+/* --- UPI Payment Modal & Verification Functions --- */
+function openUpiModal() {
+    const modal = document.getElementById('upi-modal');
+    if (modal) modal.classList.add('modal-open');
+}
+
+function closeUpiModal() {
+    const modal = document.getElementById('upi-modal');
+    if (modal) modal.classList.remove('modal-open');
+}
+
+function copyUpiId() {
+    const upiId = '8956419960@ibl';
+    navigator.clipboard.writeText(upiId).then(() => {
+        showToast('📋 UPI ID (8956419960@ibl) copied to clipboard!');
+    }).catch(err => {
+        showToast('UPI ID: 8956419960@ibl');
+    });
+}
+
+async function handleUpiConfirmSubmit(e) {
+    e.preventDefault();
+    const utr = document.getElementById('upi-utr-input')?.value.trim();
+
+    if (!utr || utr.length < 6) {
+        showToast('Please enter a valid 12-digit UPI Ref No. / UTR.');
+        return;
+    }
+
+    const btn = document.getElementById('btn-upi-confirm');
+    const originalContent = btn ? btn.innerHTML : '';
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">progress_activity</span> Submitting UTR Verification...';
+    }
+
+    const paymentStatus = `Verification Pending (UTR: ${utr})`;
+
+    if (supabaseClient && currentUser) {
+        try {
+            await supabaseClient.auth.updateUser({
+                data: { payment_status: paymentStatus, utr_number: utr }
+            });
+        } catch (err) {
+            console.warn('Auth metadata update notice:', err);
+        }
+
+        try {
+            await supabaseClient
+                .from('registrations')
+                .update({ payment_status: paymentStatus, utr_number: utr })
+                .eq('user_id', currentUser.id);
+        } catch (err) {
+            console.warn('Registrations table update notice:', err);
+        }
+    }
+
+    if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = originalContent;
+    }
+
+    showToast(`✅ Payment UTR (${utr}) submitted! Registration verification pending.`);
+    closeUpiModal();
+    openAuthModal('orders');
 }
 
